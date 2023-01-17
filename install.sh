@@ -16,7 +16,7 @@ read -p "Choose a port for the rtmp intake (default: 1935) " RTMP_PORT
 
 # If there is an empty string, use the default value
 DO_UPDATES=${DO_UPDATES:-y}
-WEB_PORT=${WEB_PORT:-80}
+WEB_PORT=${WEB_PORT:-8080}
 RTMP_PORT=${RTMP_PORT:-1935}
 
 # Perform validation on input
@@ -43,11 +43,39 @@ if [ "$DO_UPDATES" = "y" ]; then
   apt --quiet --quiet --yes autoremove >/dev/null 2>&1
 fi
 
-# BIG
-# WIP
-# FROM
-# HERE
+#     BIG     #
+#     WIP     #
+#     FROM     #
+#     HERE     #
 
+# Add the user owncast
 useradd owncast --system --shell /usr/sbin/nologin --home /var/lib/owncast --comment "owncast daemon user"
+
+# Create essential dirs
 install --directory --owner owncast --group owncast /var/lib/owncast
-apt install ffmpeg nginx-light certbot -y
+
+# Install packages
+apt --quiet --quiet --yes install ffmpeg nginx-light certbot >/dev/null 2>&1
+
+# Verify installation. Set a flag to track whether any checks failed
+INSTALL_FAILED=false
+
+# Check the installation of ffmpeg
+if ! command -v ffmpeg &> /dev/null; then
+  echo -e "\033[31mWe could not verify the correctness of the installation. ffmpeg is not installed.\033[0m"
+  INSTALL_FAILED=true
+fi
+
+# check if the user "owncast" exists
+if ! id -u owncast >/dev/null 2>&1; then
+  echo -e "\033[31mWe could not verify the correctness of the installation. User owncast doesn't exist.\033[0m"
+  INSTALL_FAILED=true
+fi
+
+# If any checks failed, exit with an error code
+if $INSTALL_FAILED; then
+  exit 1
+else
+  # All checks passed, display success message
+  echo -e "\033[32mInstallation checks passed. You can now start streaming.\033[0m"
+fi
