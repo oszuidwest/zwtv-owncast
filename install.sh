@@ -3,6 +3,12 @@
 # Start with a clean terminal
 clear
 
+# Are we root?
+if [ "$(id -u)" != "0" ]; then
+  echo "You must be root to execute the script. Exiting."
+  exit 1
+fi
+
 # Ask for input for variables
 read -p "Do you want to perform all OS updates? (default: y) " DO_UPDATES
 read -p "Choose a port for the web interface (default: 8080) " WEB_PORT
@@ -42,6 +48,6 @@ fi
 # FROM
 # HERE
 
-apt install ffmpeg nginx certbot -y
-mkdir -p /var/lib/owncast/database
-useradd owncast --system --shell /bin/false
+useradd owncast --system --shell /usr/sbin/nologin --home /var/lib/owncast --comment "owncast daemon user"
+install --directory --owner owncast --group owncast /var/lib/owncast
+apt install ffmpeg nginx-light certbot -y
