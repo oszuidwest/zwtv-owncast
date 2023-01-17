@@ -3,7 +3,7 @@
 # Start with a clean terminal
 clear
 
-# Are we root?
+# Check if the user is root
 if [ "$(id -u)" != "0" ]; then
   echo "You must be root to execute the script. Exiting."
   exit 1
@@ -62,13 +62,13 @@ INSTALL_FAILED=false
 
 # Check the installation of ffmpeg
 if ! command -v ffmpeg &> /dev/null; then
-  echo -e "\033[31mWe could not verify the correctness of the installation. ffmpeg is not installed.\033[0m"
+  echo -e "\033[31mInstallation failed. ffmpeg is not installed.\033[0m"
   INSTALL_FAILED=true
 fi
 
 # check if the user "owncast" exists
 if ! id -u owncast >/dev/null 2>&1; then
-  echo -e "\033[31mWe could not verify the correctness of the installation. User owncast doesn't exist.\033[0m"
+  echo -e "\033[31mInstallation failed. User owncast doesn't exist.\033[0m"
   INSTALL_FAILED=true
 fi
 
