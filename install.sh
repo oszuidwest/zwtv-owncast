@@ -9,6 +9,21 @@ if [ "$(id -u)" != "0" ]; then
   exit 1
 fi
 
+# Function that checks and creates dirs
+check_and_fix_dirs() {
+  for dir_path in "$@"
+  do
+    if [ -d "$dir_path" ]; then
+      if [ "$(stat -c '%U:%G' $dir_path)" == "owncast:owncast" ]; then
+      else
+        chown owncast:owncast $dir_path
+      fi
+    else
+      install --directory --owner owncast --group owncast $dir_path
+    fi
+  done
+}
+
 # Ask for input for variables
 read -p "Do you want to perform all OS updates? (default: y) " DO_UPDATES
 read -p "Choose a port for the web interface (default: 8080) " WEB_PORT
@@ -49,17 +64,7 @@ fi
 apt --quiet --quiet --yes install ffmpeg nginx-light certbot >/dev/null 2>&1
 
 # Check if the working directory exists
-if [ -d "/var/lib/owncast" ]; then
-  # Check if the directory is owned by owncast with the group owncast
-  if [ "$(stat -c '%U:%G' /var/lib/owncast)" == "owncast:owncast" ]; then
-  else
-    # Fix the ownership
-    chown owncast:owncast /var/lib/owncast
-  fi
-else
-  # Create essential dirs
-  install --directory --owner owncast --group owncast /var/lib/owncast
-fi
+check_and_fix_dirs "/var/lib/owncast" "/var/log/owncast" 
 
 #     BIG     #
 #     WIP     #
@@ -87,7 +92,7 @@ cat << EOF > /etc/systemd/system/owncast.service
   User=owncast
   Group=owncast
   WorkingDirectory=/var/lib/owncast
-  ExecStart=/usr/bin/owncast -backupdir /var/lib/owncast/backup -database /var/lib/owncast/database -webserverport $WEB_PORT -rtmpport $RTMP_PORT -streamkey $STREAM_KEY
+  ExecStart=/usr/bin/owncast -backupdir /var/lib/owncast/backup -database /var/lib/owncast/database -logdir /var/log/owncast -webserverport $WEB_PORT -rtmpport $RTMP_PORT -streamkey $STREAM_KEY
   Restart=on-failure
   RestartSec=5
   [Install]
