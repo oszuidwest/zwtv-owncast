@@ -45,19 +45,31 @@ if [ "$DO_UPDATES" = "y" ]; then
   apt --quiet --quiet --yes autoremove >/dev/null 2>&1
 fi
 
+# Install packages
+apt --quiet --quiet --yes install ffmpeg nginx-light certbot >/dev/null 2>&1
+
+# Check if the working directory exists
+if [ -d "/var/lib/owncast" ]; then
+  # Check if the directory is owned by owncast with the group owncast
+  if [ "$(stat -c '%U:%G' /var/lib/owncast)" == "owncast:owncast" ]; then
+  else
+    # Fix the ownership
+    chown owncast:owncast /var/lib/owncast
+  fi
+else
+  # Create essential dirs
+  install --directory --owner owncast --group owncast /var/lib/owncast
+fi
+
 #     BIG     #
 #     WIP     #
 #     FROM     #
 #     HERE     #
 
-# Add the user owncast
-useradd owncast --system --shell /usr/sbin/nologin --home /var/lib/owncast --comment "owncast daemon user"
-
-# Create essential dirs
-install --directory --owner owncast --group owncast /var/lib/owncast
-
-# Install packages
-apt --quiet --quiet --yes install unzip ffmpeg nginx-light certbot >/dev/null 2>&1
+# Add the user owncast if it doesn't exist
+if ! id -u owncast > /dev/null 2>&1; then 
+  useradd owncast --system --shell /usr/sbin/nologin --home /var/lib/owncast --comment "owncast daemon user"
+fi
 
 # Download and install Owncast (harcoded for now)
 curl -LJO https://github.com/owncast/owncast/releases/download/v0.0.13/owncast-0.0.13-linux-64bit.zip -o /var/lib/owncast/owncast.zip
