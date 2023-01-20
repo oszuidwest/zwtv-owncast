@@ -59,6 +59,22 @@ install --directory --owner owncast --group owncast /var/lib/owncast
 # Install packages
 apt --quiet --quiet --yes install ffmpeg nginx-light certbot >/dev/null 2>&1
 
+# Create the service file
+cat << EOF > /etc/supervisor/conf.d/stream.conf
+  [Unit]
+  Description=Owncast streaming service
+  [Service]
+  Type=simple
+  User=owncast
+  Group=owncast
+  WorkingDirectory=/var/lib/owncast
+  ExecStart=/usr/bin/owncast -backupdir /var/lib/owncast/backup -database /var/lib/owncast/database -webserverport $WEB_PORT -rtmpport $RTMP_PORT -streamkey $STREAM_KEY
+  Restart=on-failure
+  RestartSec=5
+  [Install]
+  WantedBy=multi-user.target
+EOF
+
 # Verify installation. Set a flag to track whether any checks failed
 INSTALL_FAILED=false
 
