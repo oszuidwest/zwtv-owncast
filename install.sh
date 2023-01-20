@@ -13,11 +13,13 @@ fi
 read -p "Do you want to perform all OS updates? (default: y) " DO_UPDATES
 read -p "Choose a port for the web interface (default: 8080) " WEB_PORT
 read -p "Choose a port for the rtmp intake (default: 1935) " RTMP_PORT
+read -p "Choose a stream key (default: xyz987) " STREAM_KEY
 
 # If there is an empty string, use the default value
 DO_UPDATES=${DO_UPDATES:-y}
 WEB_PORT=${WEB_PORT:-8080}
 RTMP_PORT=${RTMP_PORT:-1935}
+STREAM_KEY=${STREAM_KEY:-xyz987}
 
 # Perform validation on input
 if [ "$DO_UPDATES" != "y" ] && [ "$DO_UPDATES" != "n" ]; then
