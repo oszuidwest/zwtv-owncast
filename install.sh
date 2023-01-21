@@ -15,6 +15,7 @@ check_and_fix_dirs() {
   do
     if [ -d "$dir_path" ]; then
       if [ "$(stat -c '%U:%G' $dir_path)" == "owncast:owncast" ]; then
+        : # Do nothing
       else
         chown owncast:owncast $dir_path
       fi
