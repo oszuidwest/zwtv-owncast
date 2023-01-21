@@ -100,6 +100,10 @@ cat << EOF > /etc/systemd/system/owncast.service
   WantedBy=multi-user.target
 EOF
 
+# Enable service
+systemctl daemon-reload
+systemctl enable owncast.service
+
 # Verify installation. Set a flag to track whether any checks failed
 INSTALL_FAILED=false
 
