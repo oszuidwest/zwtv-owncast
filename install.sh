@@ -78,7 +78,7 @@ check_and_fix_dirs "/var/lib/owncast" "/var/log/owncast"
 #     HERE     #
 
 # Download and install Owncast (harcoded for now)
-curl -LJO https://github.com/owncast/owncast/releases/download/v0.0.13/owncast-0.0.13-linux-64bit.zip -o /var/lib/owncast/owncast.zip
+wget "https://github.com/owncast/owncast/releases/download/v0.0.13/owncast-0.0.13-linux-64bit.zip" -O /var/lib/owncast/owncast.zip
 tar -xf /var/lib/owncast/owncast.zip -C /var/lib/owncast/
 rm /var/lib/owncast/owncast.zip
 chmod +x /var/lib/owncast/owncast
