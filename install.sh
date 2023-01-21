@@ -82,7 +82,6 @@ wget "https://github.com/owncast/owncast/releases/download/v0.0.13/owncast-0.0.1
 unzip /var/lib/owncast/owncast.zip -d /var/lib/owncast/
 rm /var/lib/owncast/owncast.zip
 chmod +x /var/lib/owncast/owncast
-ln -s /var/lib/owncast/owncast /usr/bin/
 
 # Create the service file
 cat << EOF > /etc/systemd/system/owncast.service
