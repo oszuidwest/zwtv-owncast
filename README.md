@@ -1,5 +1,5 @@
 # owncast-nginx-ssl
-Debian installer for Owncast that makes it a service etc. Replacement for https://github.com/oszuidwest/nginx-rtmp-live
+Debian installer for Owncast that makes it a service etc. Work in progress replacement for https://github.com/oszuidwest/nginx-rtmp-live
 
 ## Conventions
 - Owncast has it's own user named `owncast`
