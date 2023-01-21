@@ -62,7 +62,7 @@ if [ "$DO_UPDATES" = "y" ]; then
 fi
 
 # Install packages
-apt --quiet --quiet --yes install ffmpeg nginx-light certbot >/dev/null 2>&1
+apt --quiet --quiet --yes install unzip ffmpeg nginx-light certbot >/dev/null 2>&1
 
 # Add the user owncast if it doesn't exist
 if ! id -u owncast > /dev/null 2>&1; then 
@@ -79,7 +79,7 @@ check_and_fix_dirs "/var/lib/owncast" "/var/log/owncast"
 
 # Download and install Owncast (harcoded for now)
 wget "https://github.com/owncast/owncast/releases/download/v0.0.13/owncast-0.0.13-linux-64bit.zip" -O /var/lib/owncast/owncast.zip
-tar -xf /var/lib/owncast/owncast.zip -C /var/lib/owncast/
+unzip /var/lib/owncast/owncast.zip -C /var/lib/owncast/
 rm /var/lib/owncast/owncast.zip
 chmod +x /var/lib/owncast/owncast
 ln -s /var/lib/owncast/owncast /usr/bin/
