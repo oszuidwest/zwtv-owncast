@@ -93,7 +93,7 @@ cat << EOF > /etc/systemd/system/owncast.service
   User=owncast
   Group=owncast
   WorkingDirectory=/var/lib/owncast
-  ExecStart=/usr/bin/owncast -backupdir /var/lib/owncast/backup -database /var/lib/owncast/database -logdir /var/log/owncast -webserverport $WEB_PORT -rtmpport $RTMP_PORT -streamkey $STREAM_KEY
+  ExecStart=owncast -backupdir /var/lib/owncast/backup -database /var/lib/owncast/database -logdir /var/log/owncast -webserverport $WEB_PORT -rtmpport $RTMP_PORT -streamkey $STREAM_KEY
   Restart=on-failure
   RestartSec=5
   [Install]
