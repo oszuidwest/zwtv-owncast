@@ -64,6 +64,11 @@ fi
 # Install packages
 apt --quiet --quiet --yes install ffmpeg nginx-light certbot >/dev/null 2>&1
 
+# Add the user owncast if it doesn't exist
+if ! id -u owncast > /dev/null 2>&1; then 
+  useradd owncast --system --shell /usr/sbin/nologin --home /var/lib/owncast --comment "owncast daemon user"
+fi
+
 # Check if the working directory exists
 check_and_fix_dirs "/var/lib/owncast" "/var/log/owncast" 
 
@@ -71,11 +76,6 @@ check_and_fix_dirs "/var/lib/owncast" "/var/log/owncast"
 #     WIP     #
 #     FROM     #
 #     HERE     #
-
-# Add the user owncast if it doesn't exist
-if ! id -u owncast > /dev/null 2>&1; then 
-  useradd owncast --system --shell /usr/sbin/nologin --home /var/lib/owncast --comment "owncast daemon user"
-fi
 
 # Download and install Owncast (harcoded for now)
 curl -LJO https://github.com/owncast/owncast/releases/download/v0.0.13/owncast-0.0.13-linux-64bit.zip -o /var/lib/owncast/owncast.zip
