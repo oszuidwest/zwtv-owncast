@@ -17,7 +17,7 @@ check_and_fix_dirs() {
       if [ "$(stat -c '%U:%G' $dir_path)" == "owncast:owncast" ]; then
         : # Do nothing
       else
-        chown owncast:owncast $dir_path
+        chown -R owncast:owncast $dir_path
       fi
     else
       install --directory --owner owncast --group owncast $dir_path
