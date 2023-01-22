@@ -18,11 +18,9 @@ check_and_fix_dirs() {
         : # Do nothing
       else
         chown -R owncast:owncast $dir_path
-        setfacl -d -m u:owncast:rwx,g:owncast:rwx,d:u:owncast:rwx,d:g:owncast:rwx $dir_path
       fi
     else
       install --directory --owner owncast --group owncast $dir_path
-      setfacl -d -m u:owncast:rwx,g:owncast:rwx,d:u:owncast:rwx,d:g:owncast:rwx $dir_path
     fi
   done
 }
@@ -84,6 +82,9 @@ wget "https://github.com/owncast/owncast/releases/download/v0.0.13/owncast-0.0.1
 unzip -o /opt/owncast/owncast.zip -d /opt/owncast/
 rm /opt/owncast/owncast.zip
 chmod +x /opt/owncast/owncast
+
+# Check and fix dirs after extraction again. They are probably owned by root
+check_and_fix_dirs "/opt/owncast" # TODO use a sticky bit or ACL to make this better
 
 # Create the service file
 cat << EOF > /etc/systemd/system/owncast.service
