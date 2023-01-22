@@ -9,22 +9,6 @@ if [ "$(id -u)" != "0" ]; then
   exit 1
 fi
 
-# Function that checks and creates dirs
-check_and_fix_dirs() {
-  for dir_path in "$@"
-  do
-    if [ -d "$dir_path" ]; then
-      if [ "$(stat -c '%U:%G' $dir_path)" == "owncast:owncast" ]; then
-        : # Do nothing
-      else
-        chown -R owncast:owncast $dir_path
-      fi
-    else
-      install --directory --owner owncast --group owncast $dir_path
-    fi
-  done
-}
-
 # Ask for input for variables
 read -p "Do you want to perform all OS updates? (default: y) " DO_UPDATES
 read -p "Choose a port for the web interface (default: 8080) " WEB_PORT
@@ -62,15 +46,12 @@ if [ "$DO_UPDATES" = "y" ]; then
 fi
 
 # Install packages
-apt --quiet --quiet --yes install acl certbot ffmpeg nginx-light unzip >/dev/null 2>&1
+apt --quiet --quiet --yes install certbot ffmpeg nginx-light unzip >/dev/null 2>&1
 
 # Add the user owncast if it doesn't exist
 if ! id -u owncast > /dev/null 2>&1; then 
   useradd owncast --system --shell /usr/sbin/nologin --home /opt/owncast --comment "owncast daemon user"
 fi
-
-# Check if the working directory exists
-check_and_fix_dirs "/opt/owncast" "/var/log/owncast" 
 
 #     BIG     #
 #     WIP     #
@@ -78,13 +59,14 @@ check_and_fix_dirs "/opt/owncast" "/var/log/owncast"
 #     HERE     #
 
 # Download and install Owncast (harcoded for now)
-wget "https://github.com/owncast/owncast/releases/download/v0.0.13/owncast-0.0.13-linux-64bit.zip" -O /opt/owncast/owncast.zip
-unzip -o /opt/owncast/owncast.zip -d /opt/owncast/
-rm /opt/owncast/owncast.zip
+wget "https://github.com/owncast/owncast/releases/download/v0.0.13/owncast-0.0.13-linux-64bit.zip" -O /tmp/owncast.zip
+unzip -o /tmp/owncast.zip -d /opt/owncast/
+rm /tmp/owncast.zip
+chown -R owncast:owncast /opt/owncast/
 chmod +x /opt/owncast/owncast
 
-# Check and fix dirs after extraction again. They are probably owned by root
-check_and_fix_dirs "/opt/owncast" # TODO use a sticky bit or ACL to make this better
+# Create log dir
+install --directory --owner owncast --group owncast /var/log/owncast
 
 # Create the service file
 cat << EOF > /etc/systemd/system/owncast.service
