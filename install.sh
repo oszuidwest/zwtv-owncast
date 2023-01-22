@@ -10,16 +10,24 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Ask for input for variables
-read -p "Do you want to perform all OS updates? (default: y) " DO_UPDATES
-read -p "Choose a port for the web interface (default: 8080) " WEB_PORT
-read -p "Choose a port for the rtmp intake (default: 1935) " RTMP_PORT
-read -p "Choose a stream key (default: xyz987) " STREAM_KEY
+read -p "Do you want to perform all OS updates? (default: y): " DO_UPDATES
+read -p "Choose a port for the app to run on (default: 8080): " WEB_PORT
+read -p "Choose a port for the rtmp intake (default: 1935): " RTMP_PORT
+read -p "Choose a stream key (default: xyz987): " STREAM_KEY
+read -p "Do you want a proxy serving traffic on port 80 and 443 with ssl? (default: n): " ENABLE_PROXY
+
+# Only ask for the log file and log rotation if ENABLE_PROXY is 'y'
+if [ "$ENABLE_PROXY" = "y" ]; then
+  read -p "Specify a hostname for the proxy (for example: live.zuidwesttv.nl): " SSL_HOSTNAME
+  read -p "Specify an e-mailadress for SSL (for example: techniek@zuidwesttv.nl): " SSL_EMAIL
+fi
 
 # If there is an empty string, use the default value
 DO_UPDATES=${DO_UPDATES:-y}
 WEB_PORT=${WEB_PORT:-8080}
 RTMP_PORT=${RTMP_PORT:-1935}
 STREAM_KEY=${STREAM_KEY:-xyz987}
+ENABLE_PROXY=${ENABLE_PROXY:-n}
 
 # Perform validation on input
 if [ "$DO_UPDATES" != "y" ] && [ "$DO_UPDATES" != "n" ]; then
@@ -37,6 +45,24 @@ if ! [[ "$RTMP_PORT" =~ ^[0-9]+$ ]] || [ "$RTMP_PORT" -lt 1 ] || [ "$RTMP_PORT" 
   exit 1
 fi
 
+if [ "$ENABLE_PROXY" != "y" ] && [ "$ENABLE_PROXY" != "n" ]; then
+  echo "Invalid input for ENABLE_PROXY. Only 'y' or 'n' are allowed."
+  exit 1
+fi
+
+# Only validate these if the proxy is enabled
+if [ "$ENABLE_PROXY" = "y" ]; then
+  if [[ ! "$SSL_HOSTNAME" =~ ^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$ ]]; then
+    echo "Invalid hostname. Only bare hostnames are allowed. No https:// in front of it please"
+    exit 1
+  fi
+
+  if [[ ! "$SSL_EMAIL" =~ ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$ ]]; then
+    echo "Invalid e-mailadress"
+    exit 1
+  fi
+fi
+
 # Check if the DO_UPDATES variable is set to 'y'
 if [ "$DO_UPDATES" = "y" ]; then
   # If it is, run the apt update, upgrade, and autoremove commands with the --yes flag to automatically answer yes to prompts
@@ -46,7 +72,7 @@ if [ "$DO_UPDATES" = "y" ]; then
 fi
 
 # Install packages
-apt --quiet --quiet --yes install certbot ffmpeg nginx-light unzip >/dev/null 2>&1
+apt --quiet --quiet --yes install ffmpeg unzip >/dev/null 2>&1
 
 # Add the user owncast if it doesn't exist
 if ! id -u owncast > /dev/null 2>&1; then 
