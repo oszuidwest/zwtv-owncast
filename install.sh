@@ -18,11 +18,11 @@ check_and_fix_dirs() {
         : # Do nothing
       else
         chown -R owncast:owncast $dir_path
-        setfacl -d -m u:owncast:rwx,g:owncast:rwx $dir_path
+        setfacl -d -m u:owncast:rwx,g:owncast:rwx,d:u:owncast:rwx,d:g:owncast:rwx $dir_path
       fi
     else
       install --directory --owner owncast --group owncast $dir_path
-      setfacl -d -m u:owncast:rwx,g:owncast:rwx $dir_path
+      setfacl -d -m u:owncast:rwx,g:owncast:rwx,d:u:owncast:rwx,d:g:owncast:rwx $dir_path
     fi
   done
 }
