@@ -1,5 +1,3 @@
-# BIG WORK IN PROGRESS
-
 # Start with a clean terminal
 clear
 
@@ -11,7 +9,7 @@ fi
 
 # Ask for input for variables
 read -p "Do you want to perform all OS updates? (default: y): " DO_UPDATES
-read -p "Choose a port for the app to run on (default: 8080): " WEB_PORT
+read -p "Choose a port for the app to run on (default: 8080): " APP_PORT
 read -p "Choose a port for the rtmp intake (default: 1935): " RTMP_PORT
 read -p "Choose a stream key (default: xyz987): " STREAM_KEY
 read -p "Do you want a proxy serving traffic on port 80 and 443 with ssl? (default: n): " ENABLE_PROXY
@@ -24,7 +22,7 @@ fi
 
 # If there is an empty string, use the default value
 DO_UPDATES=${DO_UPDATES:-y}
-WEB_PORT=${WEB_PORT:-8080}
+APP_PORT=${APP_PORT:-8080}
 RTMP_PORT=${RTMP_PORT:-1935}
 STREAM_KEY=${STREAM_KEY:-xyz987}
 ENABLE_PROXY=${ENABLE_PROXY:-n}
@@ -35,8 +33,8 @@ if [ "$DO_UPDATES" != "y" ] && [ "$DO_UPDATES" != "n" ]; then
   exit 1
 fi
 
-if ! [[ "$WEB_PORT" =~ ^[0-9]+$ ]] || [ "$WEB_PORT" -lt 1 ] || [ "$WEB_PORT" -gt 65535 ]; then
-  echo "Invalid port number for WEB_PORT. Please enter a valid port number (1 to 65535)."
+if ! [[ "$APP_PORT" =~ ^[0-9]+$ ]] || [ "$APP_PORT" -lt 1 ] || [ "$APP_PORT" -gt 65535 ]; then
+  echo "Invalid port number for APP_PORT. Please enter a valid port number (1 to 65535)."
   exit 1
 fi
 
@@ -110,9 +108,34 @@ cat << EOF > /etc/systemd/system/owncast.service
   WantedBy=multi-user.target
 EOF
 
+# Install Caddy
+apt install -y debian-keyring debian-archive-keyring apt-transport-https
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --yes --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+apt update
+apt install caddy
+
+# Configure Caddy for HTTPS proxying
+if [ -n "$SSL_HOSTNAME" ] && [ -n "$SSL_EMAIL" ]; then
+
+  cat >/etc/caddy/Caddyfile <<EOF
+  ${SSL_HOSTNAME} {
+    reverse_proxy 127.0.0.1:$APP_PORT
+    encode gzip
+    tls ${SSL_EMAIL}
+  }
+EOF
+  # Start Caddy
+  systemctl enable caddy
+  systemctl restart caddy
+else
+  echo -e "\033[1mOWNCAST INSTALL WARNING: \033[0mServer hostname and/or email not specified.  Skipping Caddy/SSL configuration."
+fi
+
 # Enable service
 systemctl daemon-reload
 systemctl enable owncast.service
+systemctl restart owncast
 
 # Verify installation. Set a flag to track whether any checks failed
 INSTALL_FAILED=false
