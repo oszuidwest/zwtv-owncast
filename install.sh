@@ -18,9 +18,11 @@ check_and_fix_dirs() {
         : # Do nothing
       else
         chown -R owncast:owncast $dir_path
+        setfacl -d -m u:owncast:rwx,g:owncast:rwx $dir_path
       fi
     else
       install --directory --owner owncast --group owncast $dir_path
+      setfacl -d -m u:owncast:rwx,g:owncast:rwx $dir_path
     fi
   done
 }
@@ -62,7 +64,7 @@ if [ "$DO_UPDATES" = "y" ]; then
 fi
 
 # Install packages
-apt --quiet --quiet --yes install unzip ffmpeg nginx-light certbot >/dev/null 2>&1
+apt --quiet --quiet --yes install acl certbot ffmpeg nginx-light unzip >/dev/null 2>&1
 
 # Add the user owncast if it doesn't exist
 if ! id -u owncast > /dev/null 2>&1; then 
