@@ -66,11 +66,11 @@ apt --quiet --quiet --yes install unzip ffmpeg nginx-light certbot >/dev/null 2>
 
 # Add the user owncast if it doesn't exist
 if ! id -u owncast > /dev/null 2>&1; then 
-  useradd owncast --system --shell /usr/sbin/nologin --home /var/lib/owncast --comment "owncast daemon user"
+  useradd owncast --system --shell /usr/sbin/nologin --home /opt/owncast --comment "owncast daemon user"
 fi
 
 # Check if the working directory exists
-check_and_fix_dirs "/var/lib/owncast" "/var/log/owncast" 
+check_and_fix_dirs "/opt/owncast" "/var/log/owncast" 
 
 #     BIG     #
 #     WIP     #
@@ -78,10 +78,10 @@ check_and_fix_dirs "/var/lib/owncast" "/var/log/owncast"
 #     HERE     #
 
 # Download and install Owncast (harcoded for now)
-wget "https://github.com/owncast/owncast/releases/download/v0.0.13/owncast-0.0.13-linux-64bit.zip" -O /var/lib/owncast/owncast.zip
-unzip /var/lib/owncast/owncast.zip -d /var/lib/owncast/
-rm /var/lib/owncast/owncast.zip
-chmod +x /var/lib/owncast/owncast
+wget "https://github.com/owncast/owncast/releases/download/v0.0.13/owncast-0.0.13-linux-64bit.zip" -O /opt/owncast/owncast.zip
+unzip /opt/owncast/owncast.zip -d /opt/owncast/
+rm /opt/owncast/owncast.zip
+chmod +x /opt/owncast/owncast
 
 # Create the service file
 cat << EOF > /etc/systemd/system/owncast.service
@@ -91,8 +91,8 @@ cat << EOF > /etc/systemd/system/owncast.service
   Type=simple
   User=owncast
   Group=owncast
-  WorkingDirectory=/var/lib/owncast
-  ExecStart=owncast -backupdir /var/lib/owncast/backup -database /var/lib/owncast/database -logdir /var/log/owncast -webserverport $WEB_PORT -rtmpport $RTMP_PORT -streamkey $STREAM_KEY
+  WorkingDirectory=/opt/owncast
+  ExecStart=/opt/owncast/owncast -backupdir /opt/owncast/backup -database /opt/owncast/database -logdir /var/log/owncast -webserverport $WEB_PORT -rtmpport $RTMP_PORT -streamkey $STREAM_KEY
   Restart=on-failure
   RestartSec=5
   [Install]
