@@ -81,7 +81,7 @@ check_and_fix_dirs "/opt/owncast" "/var/log/owncast"
 
 # Download and install Owncast (harcoded for now)
 wget "https://github.com/owncast/owncast/releases/download/v0.0.13/owncast-0.0.13-linux-64bit.zip" -O /opt/owncast/owncast.zip
-unzip /opt/owncast/owncast.zip -d /opt/owncast/
+unzip -o /opt/owncast/owncast.zip -d /opt/owncast/
 rm /opt/owncast/owncast.zip
 chmod +x /opt/owncast/owncast
 
