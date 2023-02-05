@@ -132,6 +132,11 @@ else
   echo -e "\033[1mOWNCAST INSTALL WARNING: \033[0mServer hostname and/or email not specified.  Skipping Caddy/SSL configuration."
 fi
 
+# Prevent indexing of the Owncast instance.
+if ! grep -q "<meta name=\"robots\" content=\"noindex, nofollow\">" /opt/owncast/webroot/index.html; then
+  sed -i '/<meta charset="UTF-8" \/>/a\<meta name="robots" content="noindex, nofollow">' /opt/owncast/webroot/index.html
+fi
+
 # Enable service
 systemctl daemon-reload
 systemctl enable owncast.service
