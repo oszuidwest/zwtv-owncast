@@ -132,7 +132,7 @@ else
   echo -e "\033[1mOWNCAST INSTALL WARNING: \033[0mServer hostname and/or email not specified.  Skipping Caddy/SSL configuration."
 fi
 
-# Use a robots.txt file to prevent Google from indexing this instance
+# Use a robots.txt file to prevent Search Engines from indexing this instance
 [[ ! -f /opt/owncast/webroot/robots.txt ]] && echo -e "User-agent: *\nDisallow: /" > /opt/owncast/webroot/robots.txt
 
 # Enable service
