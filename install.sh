@@ -132,10 +132,8 @@ else
   echo -e "\033[1mOWNCAST INSTALL WARNING: \033[0mServer hostname and/or email not specified.  Skipping Caddy/SSL configuration."
 fi
 
-# Patch index.html to prevent indexing of the Owncast instance
-if ! grep -q "<meta name=\"robots\" content=\"noindex, nofollow\">" /opt/owncast/webroot/index.html; then
-  sed -i '/<meta charset="UTF-8" \/>/a\<meta name="robots" content="noindex, nofollow">' /opt/owncast/webroot/index.html
-fi
+# Use a robots.txt file to prevent Google from indexing this instance
+[[ ! -f /opt/owncast/webroot/robots.txt ]] && echo -e "User-agent: *\nDisallow: /" > /opt/owncast/webroot/robots.txt
 
 # Enable service
 systemctl daemon-reload
