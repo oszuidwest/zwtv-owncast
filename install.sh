@@ -120,6 +120,7 @@ if [ -n "$SSL_HOSTNAME" ] && [ -n "$SSL_EMAIL" ]; then
 
   cat >/etc/caddy/Caddyfile <<EOF
   ${SSL_HOSTNAME} {
+    redir /live/zwtv.m3u8 /hls/stream.m3u8 permanent
     reverse_proxy 127.0.0.1:$APP_PORT
     encode gzip
     tls ${SSL_EMAIL}
