@@ -10,16 +10,16 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Ask for input for variables
-read -p "Do you want to perform all OS updates? (default: y): " DO_UPDATES
-read -p "Choose a port for the app to run on (default: 8080): " APP_PORT
-read -p "Choose a port for the rtmp intake (default: 1935): " RTMP_PORT
-read -p "Choose a stream key (default: xyz987): " STREAM_KEY
-read -p "Do you want a proxy serving traffic on port 80 and 443 with ssl? (default: n): " ENABLE_PROXY
+read -rp "Do you want to perform all OS updates? (default: y): " DO_UPDATES
+read -rp "Choose a port for the app to run on (default: 8080): " APP_PORT
+read -rp "Choose a port for the rtmp intake (default: 1935): " RTMP_PORT
+read -rp "Choose a stream key (default: xyz987): " STREAM_KEY
+read -rp "Do you want a proxy serving traffic on port 80 and 443 with ssl? (default: n): " ENABLE_PROXY
 
 # Only ask for the log file and log rotation if ENABLE_PROXY is 'y'
 if [ "$ENABLE_PROXY" = "y" ]; then
-  read -p "Specify a hostname for the proxy (for example: live.zuidwesttv.nl): " SSL_HOSTNAME
-  read -p "Specify an e-mailadress for SSL (for example: techniek@zuidwesttv.nl): " SSL_EMAIL
+  read -rp "Specify a hostname for the proxy (for example: live.zuidwesttv.nl): " SSL_HOSTNAME
+  read -rp "Specify an e-mailadress for SSL (for example: techniek@zuidwesttv.nl): " SSL_EMAIL
 fi
 
 # If there is an empty string, use the default value
