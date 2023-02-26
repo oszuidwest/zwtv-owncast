@@ -1,4 +1,4 @@
-# owncast-nginx-ssl
+# owncast-ssl-install
 Debian installer for Owncast that makes it a service etc. Work in progress replacement for https://github.com/oszuidwest/nginx-rtmp-live
 
 ## Conventions
