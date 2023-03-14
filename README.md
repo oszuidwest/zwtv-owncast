@@ -24,7 +24,7 @@ cat << EOF | sudo tee /etc/systemd/system/cpupower.service
 Description=CPU powersave
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/cpupower -c all frequency-set -g performance
+ExecStart=/usr/bin/cpupower frequency-set -g performance
 [Install]
 WantedBy=multi-user.target
 EOF
