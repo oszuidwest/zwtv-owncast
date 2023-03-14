@@ -11,3 +11,8 @@ Debian installer for Owncast that makes it a service etc. Work in progress repla
 ## How to use
 Set-up an empty server with Debian 11 or Ubuntu 22.04 and run this command as root:
 `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/oszuidwest/owncast-ssl-install/main/install.sh)"`
+
+### Tune CPU for maximal performace
+To tune the CPU for maximal performance. Do the following:
+- Install cpupower with `apt install linux-cpupower`
+- Tune the CPU for performance `cpupower frequency-set -g performance`
