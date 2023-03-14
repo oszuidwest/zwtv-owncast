@@ -13,6 +13,19 @@ Set-up an empty server with Debian 11 or Ubuntu 22.04 and run this command as ro
 `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/oszuidwest/owncast-ssl-install/main/install.sh)"`
 
 ### Tune CPU for maximal performace
-To tune the CPU for maximal performance. Do the following:
+Video transcoding is an intensive process. To ensure the maximal stability, tune the CPU for maximal performance. Do the following:
 - Install cpupower with `apt install linux-cpupower`
 - Tune the CPU for performance `cpupower frequency-set -g performance`
+
+To ensure it remains tuned for maximal performance after reboots, add a service file:
+```
+cat << EOF | sudo tee /etc/systemd/system/cpupower.service
+[Unit]
+Description=CPU powersave
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/cpupower -c all frequency-set -g performance
+[Install]
+WantedBy=multi-user.target
+EOF
+```
