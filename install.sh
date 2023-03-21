@@ -10,24 +10,17 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Ask for input for variables
-read -rp "Do you want to perform all OS updates? (default: y): " DO_UPDATES
-read -rp "Choose a port for the app to run on (default: 8080): " APP_PORT
-read -rp "Choose a port for the rtmp intake (default: 1935): " RTMP_PORT
-read -rp "Choose a stream key (default: xyz987): " STREAM_KEY
-read -rp "Do you want a proxy serving traffic on port 80 and 443 with ssl? (default: n): " ENABLE_PROXY
+read -rp "Do you want to perform all OS updates? (default: y): " -i "y" DO_UPDATES
+read -rp "Choose a port for the app to run on (default: 8080): " -i "8080" APP_PORT
+read -rp "Choose a port for the rtmp intake (default: 1935): " -i "1935" RTMP_PORT
+read -rp "Choose a stream key (default: xyz987): " -i "xyz987" STREAM_KEY
+read -rp "Do you want a proxy serving traffic on port 80 and 443 with ssl? (default: n): " -i "n" ENABLE_PROXY
 
 # Only ask for the log file and log rotation if ENABLE_PROXY is 'y'
 if [ "$ENABLE_PROXY" = "y" ]; then
   read -rp "Specify a hostname for the proxy (for example: live.zuidwesttv.nl): " SSL_HOSTNAME
   read -rp "Specify an e-mailadress for SSL (for example: techniek@zuidwesttv.nl): " SSL_EMAIL
 fi
-
-# If there is an empty string, use the default value
-DO_UPDATES=${DO_UPDATES:-y}
-APP_PORT=${APP_PORT:-8080}
-RTMP_PORT=${RTMP_PORT:-1935}
-STREAM_KEY=${STREAM_KEY:-xyz987}
-ENABLE_PROXY=${ENABLE_PROXY:-n}
 
 # Perform validation on input
 if [ "$DO_UPDATES" != "y" ] && [ "$DO_UPDATES" != "n" ]; then
@@ -84,18 +77,37 @@ fi
 #     FROM     #
 #     HERE     #
 
-# Download and install Owncast (harcoded for now)
-wget "https://github.com/owncast/owncast/releases/download/v0.0.13/owncast-0.0.13-linux-64bit.zip" -O /tmp/owncast.zip
-unzip -o /tmp/owncast.zip -d /opt/owncast/
-rm /tmp/owncast.zip
-chown -R owncast:owncast /opt/owncast/
-chmod +x /opt/owncast/owncast
+# Installation variables
+OWNCAST_VERSION="0.0.13"
+OWNCAST_DIR="/opt/owncast"
+OWNCAST_ZIP="/tmp/owncast.zip"
+OWNCAST_SERVICE_FILE="/etc/systemd/system/owncast.service"
 
-# Create log dir
+# Detect CPU architecture
+ARCHITECTURE=$(uname -m)
+case $ARCHITECTURE in
+    x86_64) PACKAGE="owncast-${OWNCAST_VERSION}-linux-64bit.zip" ;;
+    i686) PACKAGE="owncast-${OWNCAST_VERSION}-linux-32bit.zip" ;;
+    aarch64) PACKAGE="owncast-${OWNCAST_VERSION}-linux-arm64.zip" ;;
+    armv7l) PACKAGE="owncast-${OWNCAST_VERSION}-linux-arm7.zip" ;;
+    *)
+        echo "Unsupported CPU architecture: $ARCHITECTURE"
+        exit 1
+        ;;
+esac
+
+# Download and install Owncast
+wget "https://github.com/owncast/owncast/releases/download/v${OWNCAST_VERSION}/${PACKAGE}" -O $OWNCAST_ZIP
+unzip -o $OWNCAST_ZIP -d $OWNCAST_DIR
+rm $OWNCAST_ZIP
+chown -R owncast:owncast $OWNCAST_DIR
+chmod +x $OWNCAST_DIR/owncast
+
+# Create log directory
 install --directory --owner owncast --group owncast /var/log/owncast
 
 # Create the service file
-cat << EOF > /etc/systemd/system/owncast.service
+cat << EOF > $OWNCAST_SERVICE_FILE
   [Unit]
   Description=Owncast streaming service
   [Service]
@@ -103,7 +115,7 @@ cat << EOF > /etc/systemd/system/owncast.service
   User=owncast
   Group=owncast
   WorkingDirectory=/opt/owncast
-  ExecStart=/opt/owncast/owncast -backupdir /opt/owncast/backup -database /opt/owncast/database -logdir /var/log/owncast -webserverport $APP_PORT -rtmpport $RTMP_PORT -streamkey $STREAM_KEY
+  ExecStart=/opt/owncast/owncast -backupdir $OWNCAST_DIR/backup -database $OWNCAST_DIR/database -logdir /var/log/owncast -webserverport $APP_PORT -rtmpport $RTMP_PORT -streamkey $STREAM_KEY
   Restart=on-failure
   RestartSec=5
   [Install]
