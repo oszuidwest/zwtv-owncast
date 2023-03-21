@@ -86,18 +86,10 @@ OWNCAST_SERVICE_FILE="/etc/systemd/system/owncast.service"
 # Detect CPU architecture
 ARCHITECTURE=$(uname -m)
 case $ARCHITECTURE in
-    x86_64)
-        PACKAGE="owncast-${OWNCAST_VERSION}-linux-64bit.zip"
-        ;;
-    i686)
-        PACKAGE="owncast-${OWNCAST_VERSION}-linux-32bit.zip"
-        ;;
-    aarch64)
-        PACKAGE="owncast-${OWNCAST_VERSION}-linux-arm64.zip"
-        ;;
-    armv7l)
-        PACKAGE="owncast-${OWNCAST_VERSION}-linux-arm7.zip"
-        ;;
+    x86_64) PACKAGE="owncast-${OWNCAST_VERSION}-linux-64bit.zip" ;;
+    i686) PACKAGE="owncast-${OWNCAST_VERSION}-linux-32bit.zip" ;;
+    aarch64) PACKAGE="owncast-${OWNCAST_VERSION}-linux-arm64.zip" ;;
+    armv7l) PACKAGE="owncast-${OWNCAST_VERSION}-linux-arm7.zip" ;;
     *)
         echo "Unsupported CPU architecture: $ARCHITECTURE"
         exit 1
@@ -111,11 +103,11 @@ rm $OWNCAST_ZIP
 chown -R owncast:owncast $OWNCAST_DIR
 chmod +x $OWNCAST_DIR/owncast
 
-# Create log dir
+# Create log directory
 install --directory --owner owncast --group owncast /var/log/owncast
 
 # Create the service file
-cat << EOF > /etc/systemd/system/owncast.service
+cat << EOF > $OWNCAST_SERVICE_FILE
   [Unit]
   Description=Owncast streaming service
   [Service]
@@ -123,7 +115,7 @@ cat << EOF > /etc/systemd/system/owncast.service
   User=owncast
   Group=owncast
   WorkingDirectory=/opt/owncast
-  ExecStart=/opt/owncast/owncast -backupdir /opt/owncast/backup -database /opt/owncast/database -logdir /var/log/owncast -webserverport $APP_PORT -rtmpport $RTMP_PORT -streamkey $STREAM_KEY
+  ExecStart=/opt/owncast/owncast -backupdir $OWNCAST_DIR/backup -database $OWNCAST_DIR/database -logdir /var/log/owncast -webserverport $APP_PORT -rtmpport $RTMP_PORT -streamkey $STREAM_KEY
   Restart=on-failure
   RestartSec=5
   [Install]
