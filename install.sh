@@ -133,11 +133,6 @@ EOF
   systemctl restart caddy
 fi
 
-# Prevent search engine indexing with robots.txt
-if [ ! -f $OWNCAST_DIR/webroot/robots.txt ]; then
-  echo "User-agent: *\nDisallow: /" > $OWNCAST_DIR/webroot/robots.txt
-fi
-
 # Enable and start owncast service
 systemctl daemon-reload
 systemctl enable owncast
