@@ -14,6 +14,7 @@ read -rp "Do you want to perform all OS updates? (y/n): " DO_UPDATES
 read -rp "Choose a port for the app to run on: " APP_PORT
 read -rp "Choose a port for the RTMP intake: " RTMP_PORT
 read -rp "Choose a stream key: " STREAM_KEY
+read -rp "Choose an admin password: " ADMIN_PASSWORD
 read -rp "Do you want a proxy serving traffic on port 80 and 443 with SSL? (y/n): " ENABLE_PROXY
 
 # Ask for additional input if the proxy is enabled
@@ -109,7 +110,7 @@ Type=simple
 User=owncast
 Group=owncast
 WorkingDirectory=$OWNCAST_DIR
-ExecStart=$OWNCAST_DIR/owncast -backupdir $OWNCAST_DIR/backup -database $OWNCAST_DIR/database -logdir /var/log/owncast -webserverport $APP_PORT -rtmpport $RTMP_PORT -streamkey $STREAM_KEY
+ExecStart=$OWNCAST_DIR/owncast -backupdir $OWNCAST_DIR/backup -database $OWNCAST_DIR/database -logdir /var/log/owncast -webserverport $APP_PORT -rtmpport $RTMP_PORT -streamkey $STREAM_KEY -adminpassword $ADMIN_PASSWORD
 Restart=on-failure
 RestartSec=5
 [Install]
