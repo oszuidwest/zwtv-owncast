@@ -9,17 +9,17 @@ if [ "$(id -u)" != "0" ]; then
   exit 1
 fi
 
-# Gather user inputs
-read -rp "Do you want to perform all OS updates? (default: y): " -i "y" DO_UPDATES
-read -rp "Choose a port for the app to run on (default: 8080): " -i "8080" APP_PORT
-read -rp "Choose a port for the rtmp intake (default: 1935): " -i "1935" RTMP_PORT
-read -rp "Choose a stream key (default: xyz987): " -i "xyz987" STREAM_KEY
-read -rp "Do you want a proxy serving traffic on port 80 and 443 with ssl? (default: n): " -i "n" ENABLE_PROXY
+# Ask for user input
+read -rp "Do you want to perform all OS updates? (y/n): " DO_UPDATES
+read -rp "Choose a port for the app to run on: " APP_PORT
+read -rp "Choose a port for the RTMP intake: " RTMP_PORT
+read -rp "Choose a stream key: " STREAM_KEY
+read -rp "Do you want a proxy serving traffic on port 80 and 443 with SSL? (y/n): " ENABLE_PROXY
 
-# Request additional input if proxy is enabled
+# Ask for additional input if the proxy is enabled
 if [ "$ENABLE_PROXY" = "y" ]; then
-  read -rp "Specify a hostname for the proxy (for example: live.zuidwesttv.nl): " SSL_HOSTNAME
-  read -rp "Specify an e-mail address for SSL (for example: techniek@zuidwesttv.nl): " SSL_EMAIL
+  read -rp "Specify a hostname for the proxy: " SSL_HOSTNAME
+  read -rp "Specify an email address for SSL: " SSL_EMAIL
 fi
 
 # Input validation
@@ -120,8 +120,8 @@ EOF
 if [ "$ENABLE_PROXY" = "y" ]; then
   curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
   echo "deb [signed-by=/usr/share/keyrings/caddy-stable-archive-keyring.gpg] https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main" | tee /etc/apt/sources.list.d/caddy-stable.list
-  apt-get update
-  apt-get install caddy
+  apt -qq -y update
+  apt -qq -y install caddy
   cat <<EOF > /etc/caddy/Caddyfile
 $SSL_HOSTNAME {
   reverse_proxy 127.0.0.1:$APP_PORT
