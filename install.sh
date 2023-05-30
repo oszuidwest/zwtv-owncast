@@ -3,24 +3,24 @@
 # Clear the terminal
 clear
 
-# Check if the user is root
-if [ "$(id -u)" != "0" ]; then
-  echo "This script must be run as root." 
+# Check if running as root
+if [[ "$(id -u)" -ne 0 ]]; then
+  echo -e "${RED}This script must be run as root. Please run 'sudo su' first.${NC}"
   exit 1
 fi
 
 # Ask for user input
 read -rp "Do you want to perform all OS updates? (y/n): " DO_UPDATES
-read -rp "Choose a port for the app to run on: " APP_PORT
-read -rp "Choose a port for the RTMP intake: " RTMP_PORT
-read -rp "Choose a stream key: " STREAM_KEY
-read -rp "Choose an admin password: " ADMIN_PASSWORD
+read -rp "Choose a port for the app to run on (for example: 8080): " APP_PORT
+read -rp "Choose a port for the RTMP intake (for example: 1935): " RTMP_PORT
+read -rp "Choose a stream key (for example: hackme123): " STREAM_KEY
+read -rp "Choose an admin password (for example: admin123): " ADMIN_PASSWORD
 read -rp "Do you want a proxy serving traffic on port 80 and 443 with SSL? (y/n): " ENABLE_PROXY
 
 # Ask for additional input if the proxy is enabled
 if [ "$ENABLE_PROXY" = "y" ]; then
-  read -rp "Specify a hostname for the proxy: " SSL_HOSTNAME
-  read -rp "Specify an email address for SSL: " SSL_EMAIL
+  read -rp "Specify a hostname for the proxy (for example: owncast.example.org): " SSL_HOSTNAME
+  read -rp "Specify an email address for SSL (for exampleL webmaster@example.org): " SSL_EMAIL
 fi
 
 # Input validation
