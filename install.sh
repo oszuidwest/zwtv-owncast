@@ -78,7 +78,7 @@ fi
 #     HERE     #
 
 # Installation variables
-OWNCAST_VERSION="0.0.13"
+OWNCAST_VERSION="0.1.0"
 OWNCAST_DIR="/opt/owncast"
 OWNCAST_ZIP="/tmp/owncast.zip"
 OWNCAST_SERVICE_FILE="/etc/systemd/system/owncast.service"
