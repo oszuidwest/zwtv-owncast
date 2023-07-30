@@ -5,7 +5,7 @@ clear
 
 # Check if running as root
 if [[ "$(id -u)" -ne 0 ]]; then
-  echo -e "This script must be run as root. Please run 'sudo su' first."
+  echo -e "${RED}This script must be run as root. Please run 'sudo su' first.${NC}"
   exit 1
 fi
 
