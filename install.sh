@@ -46,7 +46,7 @@ if [ "$DO_UPDATES" = "y" ]; then
 fi
 
 # Install necessary packages
-apt -qq -y install ffmpeg unzip >/dev/null 2>&1
+install_packages silent ffmpeg unzip wget
 
 # Create owncast user if not exists
 if ! id -u owncast >/dev/null 2>&1; then 
@@ -122,13 +122,13 @@ systemctl restart owncast
 
 # Verify the installation
 if ! command -v ffmpeg >/dev/null; then
-  echo -e "\033[31mffmpeg is not installed.\033[0m"
+  echo -e "${RED}Install failed. ffmpeg is not installed.${NC}"
   exit 1
 fi
 
 if ! id -u owncast >/dev/null 2>&1; then
-  echo -e "\033[31mUser owncast does not exist.\033[0m"
+  echo -e "${RED}Install failed. User owncast does not exist.${NC}"
   exit 1
 fi
 
-echo -e "\033[32mInstallation checks passed. You can now start streaming.\033[0m"
+echo -e "${GREEN}Installation checks passed. You can now start streaming.${NC}"
