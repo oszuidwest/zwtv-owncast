@@ -34,16 +34,9 @@ ask_user "ENABLE_PROXY" "n" "Do you want a proxy serving traffic on port 80 and 
 
 # Ask for additional input if the proxy is enabled
 if [ "$ENABLE_PROXY" = "y" ]; then
-  read -rp "Specify a hostname for the proxy (for example: owncast.example.org): " SSL_HOSTNAME
-  read -rp "Specify an email address for SSL (for exampleL webmaster@example.org): " SSL_EMAIL
+  ask_user "SSL_HOSTNAME" "owncast.local" "Specify a hostname for the proxy (for example: owncast.example.org)" "host"
+  ask_user "SSL_EMAIL" "Specify an email address for SSL (for exampleL webmaster@example.org)" "email"
 fi
-
-# Additional validation for proxy inputs
-if [ "$ENABLE_PROXY" = "y" ]; then
-  if ! [[ "$SSL_HOSTNAME" =~ ^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$ ]]; then
-    echo "Invalid hostname. Only bare hostnames are allowed. No https:// in front of it please"
-    exit 1
-  fi
 
 # Run updates if DO_UPDATES is 'y'
 if [ "$DO_UPDATES" = "y" ]; then
@@ -132,6 +125,7 @@ if ! command -v ffmpeg >/dev/null; then
   echo -e "\033[31mffmpeg is not installed.\033[0m"
   exit 1
 fi
+
 if ! id -u owncast >/dev/null 2>&1; then
   echo -e "\033[31mUser owncast does not exist.\033[0m"
   exit 1
