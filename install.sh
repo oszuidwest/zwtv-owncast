@@ -1,71 +1,53 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Clear the terminal
 clear
 
-# Check if running as root
-if [[ "$(id -u)" -ne 0 ]]; then
-  echo -e "${RED}This script must be run as root. Please run 'sudo su' first.${NC}"
+# Download the functions library
+if ! curl -s -o /tmp/functions.sh https://raw.githubusercontent.com/oszuidwest/bash-functions/main/common-functions.sh; then
+  echo -e  "*** Failed to download functions library. Please check your network connection! ***"
   exit 1
 fi
 
+# Source the functions file
+source /tmp/functions.sh
+
+# Set color variables
+set_colors
+
+# Check if running as root
+are_we_root
+
+# Check if this is Linux
+is_this_linux
+
+# Set the timezone
+set_timezone Europe/Amsterdam
+
+# Hi!
+echo -e "${GREEN}⎎ Owncast set-up for ZuidWest TV${NC}\n\n"
+
 # Ask for user input
-read -rp "Do you want to perform all OS updates? (y/n): " DO_UPDATES
-read -rp "Choose a port for the app to run on (for example: 8080): " APP_PORT
-read -rp "Choose a port for the RTMP intake (for example: 1935): " RTMP_PORT
-read -rp "Choose a stream key (for example: hackme123): " STREAM_KEY
-read -rp "Choose an admin password (for example: admin123): " ADMIN_PASSWORD
-read -rp "Do you want a proxy serving traffic on port 80 and 443 with SSL? (y/n): " ENABLE_PROXY
+ask_user "DO_UPDATES" "n" "Do you want to perform all OS updates? (y/n)" "y/n"
+ask_user "APP_PORT" "8080" "Choose a port for the app to run on" "num"
+ask_user "RTMP_PORT" "1935" "Choose a port for the RTMP intake" "num"
+ask_user "STREAM_KEY" "hackme123" "Choose a stream key" "str"
+ask_user "ADMIN_PASSWORD" "admin123" "Choose an admin password" "str"
+ask_user "ENABLE_PROXY" "n" "Do you want a proxy serving traffic on port 80 and 443 with SSL? (y/n)" "y/n"
 
 # Ask for additional input if the proxy is enabled
 if [ "$ENABLE_PROXY" = "y" ]; then
-  read -rp "Specify a hostname for the proxy (for example: owncast.example.org): " SSL_HOSTNAME
-  read -rp "Specify an email address for SSL (for exampleL webmaster@example.org): " SSL_EMAIL
-fi
-
-# Input validation
-if ! [[ "$DO_UPDATES" =~ ^(y|n)?$ ]]; then
-  echo "Invalid input for DO_UPDATES. Only 'y' or 'n' are allowed."
-  exit 1
-fi
-
-if ! [[ "$APP_PORT" =~ ^[0-9]+$ ]] || [ "$APP_PORT" -lt 1 ] || [ "$APP_PORT" -gt 65535 ]; then
-  echo "Invalid port number for APP_PORT. Please enter a valid port number (1 to 65535)."
-  exit 1
-fi
-
-if ! [[ "$RTMP_PORT" =~ ^[0-9]+$ ]] || [ "$RTMP_PORT" -lt 1 ] || [ "$RTMP_PORT" -gt 65535 ]; then
-  echo "Invalid port number for RTMP_PORT. Please enter a valid port number (1 to 65535)."
-  exit 1
-fi
-
-if ! [[ "$ENABLE_PROXY" =~ ^(y|n)?$ ]]; then
-  echo "Invalid input for ENABLE_PROXY. Only 'y' or 'n' are allowed."
-  exit 1
-fi
-
-# Additional validation for proxy inputs
-if [ "$ENABLE_PROXY" = "y" ]; then
-  if ! [[ "$SSL_HOSTNAME" =~ ^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$ ]]; then
-    echo "Invalid hostname. Only bare hostnames are allowed. No https:// in front of it please"
-    exit 1
-  fi
-
-  if ! [[ "$SSL_EMAIL" =~ ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$ ]]; then
-    echo "Invalid e-mail address."
-    exit 1
-  fi
+  ask_user "SSL_HOSTNAME" "owncast.local" "Specify a hostname for the proxy (for example: owncast.example.org)" "host"
+  ask_user "SSL_EMAIL" "root@localhost.local" "Specify an email address for SSL (for example: webmaster@example.org)" "email"
 fi
 
 # Run updates if DO_UPDATES is 'y'
 if [ "$DO_UPDATES" = "y" ]; then
-  apt -qq -y update > /dev/null 2>&1
-  apt -qq -y full-upgrade > /dev/null 2>&1
-  apt -qq -y autoremove > /dev/null 2>&1
+  update_os
 fi
 
 # Install necessary packages
-apt -qq -y install ffmpeg unzip >/dev/null 2>&1
+install_packages silent ffmpeg unzip wget
 
 # Create owncast user if not exists
 if ! id -u owncast >/dev/null 2>&1; then 
@@ -141,12 +123,13 @@ systemctl restart owncast
 
 # Verify the installation
 if ! command -v ffmpeg >/dev/null; then
-  echo -e "\033[31mffmpeg is not installed.\033[0m"
-  exit 1
-fi
-if ! id -u owncast >/dev/null 2>&1; then
-  echo -e "\033[31mUser owncast does not exist.\033[0m"
+  echo -e "${RED}Install failed. ffmpeg is not installed.${NC}"
   exit 1
 fi
 
-echo -e "\033[32mInstallation checks passed. You can now start streaming.\033[0m"
+if ! id -u owncast >/dev/null 2>&1; then
+  echo -e "${RED}Install failed. User owncast does not exist.${NC}"
+  exit 1
+fi
+
+echo -e "${GREEN}Installation checks passed. You can now start streaming.${NC}"
