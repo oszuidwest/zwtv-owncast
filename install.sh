@@ -21,6 +21,9 @@ are_we_root
 # Check if this is Linux
 is_this_linux
 
+# Set the timezone
+set_timezone Europe/Amsterdam
+
 # Hi!
 echo -e "${GREEN}⎎ Owncast set-up for ZuidWest TV${NC}\n\n"
 
@@ -40,9 +43,7 @@ fi
 
 # Run updates if DO_UPDATES is 'y'
 if [ "$DO_UPDATES" = "y" ]; then
-  apt -qq -y update > /dev/null 2>&1
-  apt -qq -y full-upgrade > /dev/null 2>&1
-  apt -qq -y autoremove > /dev/null 2>&1
+  update_os
 fi
 
 # Install necessary packages
