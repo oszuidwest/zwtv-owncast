@@ -35,7 +35,7 @@ ask_user "ENABLE_PROXY" "n" "Do you want a proxy serving traffic on port 80 and 
 # Ask for additional input if the proxy is enabled
 if [ "$ENABLE_PROXY" = "y" ]; then
   ask_user "SSL_HOSTNAME" "owncast.local" "Specify a hostname for the proxy (for example: owncast.example.org)" "host"
-  ask_user "SSL_EMAIL" "Specify an email address for SSL (for example: webmaster@example.org)" "email"
+  ask_user "SSL_EMAIL" "root@localhost.local" "Specify an email address for SSL (for example: webmaster@example.org)" "email"
 fi
 
 # Run updates if DO_UPDATES is 'y'
