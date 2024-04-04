@@ -14,7 +14,7 @@ Set-up an empty server with Debian 12 or Ubuntu 22.04 and run this command as ro
 
 ### Tune CPU for maximal performace
 Video transcoding is an intensive process. To ensure the maximal stability, tune the CPU for maximal performance. This only works on machines with physical cpus, not virtualized machines or containers. Do the following:
-- Install cpupower with `apt install linux-cpupower`
+- Install cpupower with `apt install linux-tools-generic`
 - Tune the CPU for performance `cpupower frequency-set -g performance`
 
 To ensure it remains tuned for maximal performance after reboots, add a service file:
