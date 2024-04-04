@@ -14,5 +14,5 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Run ShellCheck on all .sh files
+      - name: Run ShellCheck
         uses: azohra/shell-linter@latest
