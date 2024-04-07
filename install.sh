@@ -55,7 +55,7 @@ if ! id -u owncast >/dev/null 2>&1; then
 fi
 
 # Installation variables
-OWNCAST_VERSION="0.1.2"
+OWNCAST_VERSION="0.1.3"
 OWNCAST_DIR="/opt/owncast"
 OWNCAST_ZIP="/tmp/owncast.zip"
 OWNCAST_SERVICE_FILE="/etc/systemd/system/owncast.service"
