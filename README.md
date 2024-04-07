@@ -1,4 +1,4 @@
-# owncast-ssl-install
+# zwtv-owncast
 Debian/Ubuntu installer for Owncast that makes it a service etc. Replacement for https://github.com/oszuidwest/nginx-rtmp-live
 
 ## Conventions
