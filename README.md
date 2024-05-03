@@ -1,5 +1,5 @@
-# owncast-ssl-install
-Debian/Ubuntu installer for Owncast that makes it a service etc. Replacement for https://github.com/oszuidwest/nginx-rtmp-live
+# zwtv-owncast
+Opinionated installer for Owncast, used for ZuidWest TV. Replacement for https://github.com/oszuidwest/nginx-rtmp-live
 
 ## Conventions
 - Owncast has it's own user named `owncast`
