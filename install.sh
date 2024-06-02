@@ -4,7 +4,7 @@
 clear
 
 # Download the functions library
-if ! curl -s -o /tmp/functions.sh https://raw.githubusercontent.com/oszuidwest/bash-functions/main/common-functions.sh; then
+if ! curl -s -o /tmp/functions.sh https://raw.githubusercontent.com/oszuidwest/bash-functions/refactor-user-check/common-functions.sh; then
   echo -e  "*** Failed to download functions library. Please check your network connection! ***"
   exit 1
 fi
@@ -16,7 +16,7 @@ source /tmp/functions.sh
 set_colors
 
 # Check if running as root
-are_we_root
+check_user_privileges privileged
 
 # Check if this is Linux
 is_this_linux
