@@ -1,5 +1,5 @@
 # zwtv-owncast
-Opinionated installer for Owncast, used for ZuidWest TV. Replacement for https://github.com/oszuidwest/nginx-rtmp-live
+Dockerized installer for Owncast. Used for ZuidWest TV and Rucphen RTV. Replacement for https://github.com/oszuidwest/nginx-rtmp-live
 
 ## Conventions
 - Owncast has it's own user named `owncast`
@@ -10,7 +10,7 @@ Opinionated installer for Owncast, used for ZuidWest TV. Replacement for https:/
 
 ## How to use
 Set-up an empty server with Debian 12 or Ubuntu 22.04 and run this command as root:
-`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/oszuidwest/owncast-ssl-install/main/install.sh)"`
+`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/oszuidwest/zwtv-owncast/main/install.sh)"`
 
 ### Tune CPU for maximal performace
 Video transcoding is an intensive process. To ensure the maximal stability, tune the CPU for maximal performance. This only works on machines with physical cpus, not virtualized machines or containers. Do the following:
@@ -29,5 +29,3 @@ ExecStart=/usr/bin/cpupower frequency-set -g performance
 WantedBy=multi-user.target
 EOF
 ```
-
-It might also help to use the latest `ffmpeg` version instead of the one incldued in `apt`. Newer versions usually contain performance optimalisations.

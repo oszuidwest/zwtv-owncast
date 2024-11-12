@@ -1,0 +1,39 @@
+services:
+  caddy:
+    image: caddy:alpine
+    container_name: caddy
+    restart: unless-stopped
+    networks:
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy-data:/data
+    cap_add:
+      - NET_ADMIN
+    command: caddy reverse-proxy --from ${SSL_HOSTNAME} --to owncast:8080
+  
+  owncast:
+    image: owncast/owncast:0.1.13
+    container_name: owncast
+    restart: unless-stopped
+    networks:
+      - backend
+    expose:
+      - 8080
+    ports:
+      - "1935:1935"
+    volumes:
+      - owncast-data:/app/data
+    command: -streamkey ${STREAM_KEY} -adminpassword ${ADMIN_PASSWORD}
+
+networks:
+  backend:
+    name: owncast_backend
+
+volumes:
+  caddy-data:
+    name: owncast_caddy_data
+  owncast-data:
+    name: owncast_data
