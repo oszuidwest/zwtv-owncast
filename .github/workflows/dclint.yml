@@ -1,0 +1,16 @@
+name: DClinter
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docker-compose.yml'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
