@@ -1,3 +1,4 @@
+name: zwtv-owncast
 services:
   caddy:
     image: caddy:alpine
