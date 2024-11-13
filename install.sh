@@ -25,7 +25,10 @@ is_this_linux
 set_timezone Europe/Amsterdam
 
 # Hi!
-echo -e "${GREEN}⎎ Dockerized Owncast set-up for ZuidWest TV${NC}\n\n"
+echo -e "${GREEN}⎎ Dockerized Owncast for ZuidWest TV${NC}\n\n"
+
+# Check if docker is installed 
+require_tool "docker"
 
 # Ask for user input
 ask_user "DO_UPDATES" "n" "Do you want to perform all OS updates? (y/n)" "y/n"
