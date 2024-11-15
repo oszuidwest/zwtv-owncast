@@ -9,7 +9,7 @@ on:
 
 jobs:
   lint:
-    name: Lint Docker Compose
+    name: lint
     runs-on: ubuntu-latest
     
     steps:
