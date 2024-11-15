@@ -90,7 +90,7 @@ sed -i "s|SSL_HOSTNAME=.*|SSL_HOSTNAME=${SSL_HOSTNAME}|g" "${ENV_FILE}"
 sed -i "s|SSL_EMAIL=.*|SSL_EMAIL=${SSL_EMAIL}|g" "${ENV_FILE}"
 
 # Instructions for next steps
-echo -e "${GREEN}Installation directory set up at ${INSTALL_DIR}${NC}"
+echo -e "\n\n${GREEN}✓ Installation set up at ${INSTALL_DIR}${NC}"
 echo -e "${YELLOW}The .env file has been populated with the values you provided.${NC}"
 echo -e "${YELLOW}To start Owncast and Caddy, navigate to ${INSTALL_DIR} and run:${NC}"
-echo -e "${CYAN}docker-compose up -d${NC}\n"
+echo -e "${YELLOW}docker compose up -d${NC}\n"
