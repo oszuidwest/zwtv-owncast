@@ -1,16 +1,36 @@
 # zwtv-owncast
-Opinionated installer for Owncast, used for ZuidWest TV. Replacement for https://github.com/oszuidwest/nginx-rtmp-live
+
+Dockerized installer for Owncast. Used for ZuidWest TV and Rucphen RTV. Replacement for [nginx-rtmp-live](https://github.com/oszuidwest/nginx-rtmp-live).
 
 ## Conventions
-- Owncast has it's own user named `owncast`
-- The working directory is `/opt/owncast/`
-- Configuration, logs and databases should be outside of the working directory for easy upgrades (only logs for now)
-- Owncast executable is linked to `/usr/bin/owncast`
-- Secure http proxy in port 80 and 443 with Let's Encrypt
 
-## How to use
-Set-up an empty server with Debian 12 or Ubuntu 22.04 and run this command as root:
-`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/oszuidwest/owncast-ssl-install/main/install.sh)"`
+- **Working Directory**: `/opt/owncast/`
+- **Environment Configuration**:
+  - `.env` file located in `/opt/owncast/`, populated with necessary environment variables (`STREAM_KEY`, `ADMIN_PASSWORD`, `SSL_HOSTNAME`, `SSL_EMAIL`).
+- **Owncast Data**: Stored in Docker volume `owncast_data`.
+- **Caddy Data**: Stored in Docker volume `owncast_caddy_data`.
+- **Service Setup**:
+  - Owncast and Caddy run as Docker containers.
+  - Caddy provides a secure reverse proxy with automatic SSL using Let's Encrypt.
+  - Owncast handles RTMP streaming and broadcasting.
+
+This setup ensures separation of application logic (via Docker containers) and persistent data (via Docker volumes), allowing for easy upgrades and maintenance.
+
+## How to Use
+
+Choose your own adventure ⬇️
+
+### Easy mode:
+1. Ensure DNS settings are properly configured for your domain.
+2. Set up an empty Debian or Ubuntu server with Docker and Docker Compose.
+3. Run the following command as root:
+   ```bash
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/oszuidwest/zwtv-owncast/main/install.sh)"
+   ```
+4. Everything will be installed for you.
+
+### I know what i'm doing:
+Just download the `docker-compose.yml` and `.env.example` file and have fun.
 
 ### Tune CPU for maximal performace
 Video transcoding is an intensive process. To ensure the maximal stability, tune the CPU for maximal performance. This only works on machines with physical cpus, not virtualized machines or containers. Do the following:
@@ -29,5 +49,3 @@ ExecStart=/usr/bin/cpupower frequency-set -g performance
 WantedBy=multi-user.target
 EOF
 ```
-
-It might also help to use the latest `ffmpeg` version instead of the one incldued in `apt`. Newer versions usually contain performance optimalisations.
