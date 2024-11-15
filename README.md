@@ -18,6 +18,8 @@ This setup ensures separation of application logic (via Docker containers) and p
 
 ## How to Use
 
+Choose your own adventure ⬇️
+
 ### Easy mode:
 1. Ensure DNS settings are properly configured for your domain.
 2. Set up an empty Debian or Ubuntu server with Docker and Docker Compose.
