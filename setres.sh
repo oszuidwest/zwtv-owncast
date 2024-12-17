@@ -47,10 +47,16 @@ fi
 # Owncast data
 USERNAME="admin"
 PASSWORD="${ADMIN_PASSWORD}"
-API_URL="https://${SSL_HOSTNAME}/api/admin/config/video/streamoutputvariants"
 
-# Configuration to set
-JSON_PAYLOAD=$(cat <<EOF
+# API URLs
+STREAM_API_URL="https://${SSL_HOSTNAME}/api/admin/config/video/streamoutputvariants"
+NOTIFICATION_API_URL="https://${SSL_HOSTNAME}/api/admin/config/notifications/browser"
+HIDE_VIEWER_COUNT_API_URL="https://${SSL_HOSTNAME}/api/admin/config/hideviewercount"
+DISABLE_SEARCH_API_URL="https://${SSL_HOSTNAME}/api/admin/config/disablesearchindexing"
+DISABLE_CHAT_API_URL="https://${SSL_HOSTNAME}/api/admin/config/chat/disable"
+
+# Stream Configuration
+STREAM_JSON_PAYLOAD=$(cat <<EOF
 {
     "value": [
         {
@@ -99,20 +105,48 @@ JSON_PAYLOAD=$(cat <<EOF
 }
 EOF
 )
-	
-# POST to Owncast
-echo -e "${BLUE}►► Sending POST request to ${API_URL}${NC}"
-response=$(curl -s -o /dev/null -w "%{http_code}" \
-    -X POST \
-    -u "${USERNAME}:${PASSWORD}" \
-    -H "Content-Type: application/json" \
-    -d "${JSON_PAYLOAD}" \
-    "${API_URL}")
 
-# Check status
-if [ "$response" -eq 200 ] || [ "$response" -eq 201 ]; then
-    echo -e "${GREEN}✓ POST request completed successfully (${response}).${NC}"
-else
-    echo -e "${RED}*** POST request failed. HTTP status code: ${response} ***${NC}"
-    exit 1
-fi
+# Notification Configuration
+NOTIFICATION_JSON_PAYLOAD=$(cat <<EOF
+{
+    "value": {
+        "enabled": false,
+        "goLiveMessage": "I've gone live!"
+    }
+}
+EOF
+)
+
+# Additional Configurations
+HIDE_VIEWER_COUNT_PAYLOAD='{"value": true}'
+DISABLE_SEARCH_PAYLOAD='{"value": true}'
+DISABLE_CHAT_PAYLOAD='{"value": true}'
+
+# Function to perform POST requests
+perform_post() {
+    local url=$1
+    local payload=$2
+    local description=$3
+
+    echo -e "${BLUE}►► Sending POST request to ${url} (${description})${NC}"
+    response=$(curl -s -o /dev/null -w "%{http_code}" \
+        -X POST \
+        -u "${USERNAME}:${PASSWORD}" \
+        -H "Content-Type: application/json" \
+        -d "${payload}" \
+        "${url}")
+
+    if [ "$response" -eq 200 ] || [ "$response" -eq 201 ]; then
+        echo -e "${GREEN}✓ ${description} POST request completed successfully (${response}).${NC}"
+    else
+        echo -e "${RED}*** ${description} POST request failed. HTTP status code: ${response} ***${NC}"
+        exit 1
+    fi
+}
+
+# Perform POST requests
+perform_post "${STREAM_API_URL}" "${STREAM_JSON_PAYLOAD}" "Stream Configuration"
+perform_post "${NOTIFICATION_API_URL}" "${NOTIFICATION_JSON_PAYLOAD}" "Notification Configuration"
+perform_post "${HIDE_VIEWER_COUNT_API_URL}" "${HIDE_VIEWER_COUNT_PAYLOAD}" "Hide Viewer Count"
+perform_post "${DISABLE_SEARCH_API_URL}" "${DISABLE_SEARCH_PAYLOAD}" "Disable Search Indexing"
+perform_post "${DISABLE_CHAT_API_URL}" "${DISABLE_CHAT_PAYLOAD}" "Disable Chat"
