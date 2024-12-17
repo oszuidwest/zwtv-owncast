@@ -1,6 +1,6 @@
 # zwtv-owncast
 
-A Dockerized installer for Owncast, designed for **ZuidWest TV** and **Rucphen RTV**. This project serves as a replacement for [nginx-rtmp-live](https://github.com/oszuidwest/nginx-rtmp-live).
+A Dockerized installer for Owncast, designed for ZuidWest TV and Rucphen RTV. This project serves as a replacement for [nginx-rtmp-live](https://github.com/oszuidwest/nginx-rtmp-live).
 
 ## Conventions
 
@@ -24,7 +24,7 @@ This setup separates application logic (Docker containers) from persistent data 
 
 Choose your preferred method below ⬇️
 
-### Easy Mode
+### Guided Mode
 
 1. Ensure your DNS settings are correctly configured for your domain.
 2. Set up a fresh Debian or Ubuntu server with Docker and Docker Compose installed.
@@ -34,23 +34,20 @@ Choose your preferred method below ⬇️
    ```
 4. The installer will set everything up for you automatically.
 
-### Advanced Mode: I Know What I'm Doing
+### I Know What I'm Doing
 
 Download the `docker-compose.yml` and `.env.example` files from the repository and configure them as needed.
 
-## Script for Bulk Configuration Adjustments
+## Script for Bulk Configuration
 
-The `postinstall.sh` script configures Owncast with custom settings, such as stream output variants. You will need to run the script manually.
+The `postinstall.sh` script configures Owncast with custom settings, such as stream output variants. You will need to run the script manually. It sets these settings:
 
-**Applied Configurations:**
-- Set up 4 stream output variants.
+- 4 stream output variants (360p, 480p, 720p 1080p).
 - Disable browser notifications.
 - Hide viewer counts.
 - Disable search indexing.
 - Disable chat.
 - Remove social handles and tags.
-
-Run the script after installation to apply these adjustments.
 
 ### Tune CPU for maximal performace
 Video transcoding is an intensive process. To ensure the maximal stability, tune the CPU for maximal performance. This only works on machines with physical cpus, not virtualized machines or containers. Do the following:

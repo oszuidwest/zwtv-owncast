@@ -20,6 +20,7 @@ fi
 source "$FUNCTIONS_LIB_PATH"
 
 # Load data from .env
+# shellcheck source=/dev/null
 if [ -f "$ENV_FILE" ]; then
     source "$ENV_FILE"
 else
