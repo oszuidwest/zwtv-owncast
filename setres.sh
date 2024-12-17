@@ -54,8 +54,10 @@ NOTIFICATION_API_URL="https://${SSL_HOSTNAME}/api/admin/config/notifications/bro
 HIDE_VIEWER_COUNT_API_URL="https://${SSL_HOSTNAME}/api/admin/config/hideviewercount"
 DISABLE_SEARCH_API_URL="https://${SSL_HOSTNAME}/api/admin/config/disablesearchindexing"
 DISABLE_CHAT_API_URL="https://${SSL_HOSTNAME}/api/admin/config/chat/disable"
+REMOVE_SOCIAL_HANDLES_API_URL="https://${SSL_HOSTNAME}/api/admin/config/socialhandles"
+REMOVE_TAGS_API_URL="https://${SSL_HOSTNAME}/api/admin/config/tags"
 
-# Stream Configuration
+# JSON Payloads
 STREAM_JSON_PAYLOAD=$(cat <<EOF
 {
     "value": [
@@ -106,7 +108,6 @@ STREAM_JSON_PAYLOAD=$(cat <<EOF
 EOF
 )
 
-# Notification Configuration
 NOTIFICATION_JSON_PAYLOAD=$(cat <<EOF
 {
     "value": {
@@ -117,10 +118,11 @@ NOTIFICATION_JSON_PAYLOAD=$(cat <<EOF
 EOF
 )
 
-# Additional Configurations
 HIDE_VIEWER_COUNT_PAYLOAD='{"value": true}'
 DISABLE_SEARCH_PAYLOAD='{"value": true}'
 DISABLE_CHAT_PAYLOAD='{"value": true}'
+REMOVE_SOCIAL_HANDLES_PAYLOAD='{"value": []}'
+REMOVE_TAGS_PAYLOAD='{"value": []}'
 
 # Function to perform POST requests
 perform_post() {
@@ -150,3 +152,5 @@ perform_post "${NOTIFICATION_API_URL}" "${NOTIFICATION_JSON_PAYLOAD}" "Notificat
 perform_post "${HIDE_VIEWER_COUNT_API_URL}" "${HIDE_VIEWER_COUNT_PAYLOAD}" "Hide Viewer Count"
 perform_post "${DISABLE_SEARCH_API_URL}" "${DISABLE_SEARCH_PAYLOAD}" "Disable Search Indexing"
 perform_post "${DISABLE_CHAT_API_URL}" "${DISABLE_CHAT_PAYLOAD}" "Disable Chat"
+perform_post "${REMOVE_SOCIAL_HANDLES_API_URL}" "${REMOVE_SOCIAL_HANDLES_PAYLOAD}" "Remove Social Handles"
+perform_post "${REMOVE_TAGS_API_URL}" "${REMOVE_TAGS_PAYLOAD}" "Remove Tags"
