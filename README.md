@@ -15,8 +15,8 @@ A Dockerized installer for Owncast, designed for **ZuidWest TV** and **Rucphen R
 - **Caddy Data**: Stored in the Docker volume `owncast_caddy_data`.
 - **Service Setup**:
   - Owncast and Caddy run as Docker containers.
-  - **Caddy**: Acts as a secure reverse proxy with automatic SSL certificates managed by Let's Encrypt.
-  - **Owncast**: Handles RTMP streaming and broadcasting.
+  - Caddy: Acts as a secure reverse proxy with automatic SSL certificates managed by Let's Encrypt.
+  - Owncast: Handles RTMP streaming and broadcasting.
 
 This setup separates application logic (Docker containers) from persistent data (Docker volumes), ensuring easier upgrades and maintenance.
 
@@ -27,7 +27,7 @@ Choose your preferred method below ⬇️
 ### Easy Mode
 
 1. Ensure your DNS settings are correctly configured for your domain.
-2. Set up a fresh Debian or Ubuntu server with **Docker** and **Docker Compose** installed.
+2. Set up a fresh Debian or Ubuntu server with Docker and Docker Compose installed.
 3. Run the following command as `root`:
    ```bash
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/oszuidwest/zwtv-owncast/main/install.sh)"
@@ -40,7 +40,7 @@ Download the `docker-compose.yml` and `.env.example` files from the repository a
 
 ## Script for Bulk Configuration Adjustments
 
-The `postinstall.sh` script allows you to configure Owncast with custom settings, such as stream output variants and disabling search indexing. You will need to run the script manually.
+The `postinstall.sh` script configures Owncast with custom settings, such as stream output variants. You will need to run the script manually.
 
 **Applied Configurations:**
 - Set up 4 stream output variants.
@@ -52,39 +52,20 @@ The `postinstall.sh` script allows you to configure Owncast with custom settings
 
 Run the script after installation to apply these adjustments.
 
-## Optimize CPU for Maximum Performance
+### Tune CPU for maximal performace
+Video transcoding is an intensive process. To ensure the maximal stability, tune the CPU for maximal performance. This only works on machines with physical cpus, not virtualized machines or containers. Do the following:
+- Install cpupower with `apt install linux-tools-generic`
+- Tune the CPU for performance `cpupower frequency-set -g performance`
 
-Video transcoding is CPU-intensive, so tuning your CPU for maximum performance can significantly improve stability. **Note:** This optimization only works on physical machines, not on virtualized servers or within containers.
-
-### Steps:
-1. Install `cpupower`:
-   ```bash
-   apt install linux-tools-generic
-   ```
-2. Set the CPU to performance mode:
-   ```bash
-   cpupower frequency-set -g performance
-   ```
-
-### Persist CPU Settings Across Reboots
-To ensure the CPU remains tuned for maximum performance after a reboot, set up a systemd service:
-
-```bash
+To ensure it remains tuned for maximal performance after reboots, add a service file:
+```
 cat << EOF | sudo tee /etc/systemd/system/cpupower.service
 [Unit]
-Description=CPU Performance Tuning
-
+Description=CPU tuning
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/cpupower frequency-set -g performance
-
 [Install]
 WantedBy=multi-user.target
 EOF
 ```
-
-3. Enable and start the service:
-   ```bash
-   sudo systemctl enable cpupower.service
-   sudo systemctl start cpupower.service
-   ```
