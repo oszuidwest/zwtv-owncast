@@ -54,7 +54,6 @@ ask_user "DO_UPDATES" "y" "Do you want to perform all OS updates? (y/n)" "y/n"
 ask_user "STREAM_KEY" "hackme123" "Pick a stream key for Owncast" "str"
 ask_user "ADMIN_PASSWORD" "admin123" "Choose an admin password for Owncast" "str"
 ask_user "SSL_HOSTNAME" "owncast.local" "Specify a hostname for the proxy (for example: owncast.example.org)" "host"
-ask_user "SSL_EMAIL" "root@localhost.local" "Specify an email address for SSL (for example: webmaster@example.org)" "email"
 
 # Set system timezone
 set_timezone Europe/Amsterdam
@@ -87,7 +86,6 @@ echo -e "${BLUE}►► Filling in the .env file with provided values${NC}"
 sed -i "s|ADMIN_PASSWORD=.*|ADMIN_PASSWORD=${ADMIN_PASSWORD}|g" "${ENV_FILE}"
 sed -i "s|STREAM_KEY=.*|STREAM_KEY=${STREAM_KEY}|g" "${ENV_FILE}"
 sed -i "s|SSL_HOSTNAME=.*|SSL_HOSTNAME=${SSL_HOSTNAME}|g" "${ENV_FILE}"
-sed -i "s|SSL_EMAIL=.*|SSL_EMAIL=${SSL_EMAIL}|g" "${ENV_FILE}"
 
 # Instructions for next steps
 echo -e "\n\n${GREEN}✓ Installation set up at ${INSTALL_DIR}${NC}"
