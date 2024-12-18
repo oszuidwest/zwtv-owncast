@@ -143,7 +143,6 @@ perform_post() {
         echo -e "${GREEN}✓ ${description} POST request completed successfully (${response}).${NC}"
     else
         echo -e "${RED}*** ${description} POST request failed. HTTP status code: ${response} ***${NC}"
-        exit 1
     fi
 }
 
