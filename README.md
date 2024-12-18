@@ -1,6 +1,6 @@
 # zwtv-owncast
 
-A Dockerized installer for Owncast, designed for ZuidWest TV and Rucphen RTV. This project serves as a replacement for [nginx-rtmp-live](https://github.com/oszuidwest/nginx-rtmp-live).
+A Dockerized installer for Owncast, designed for [ZuidWest TV](https://www.zuidwesttv.nl/) and [Rucphen RTV](https://www.rucphenrtv.nl/). This project serves as a replacement for [nginx-rtmp-live](https://github.com/oszuidwest/nginx-rtmp-live).
 
 ## Conventions
 
@@ -10,7 +10,6 @@ A Dockerized installer for Owncast, designed for ZuidWest TV and Rucphen RTV. Th
     - `STREAM_KEY`
     - `ADMIN_PASSWORD`
     - `SSL_HOSTNAME`
-    - `SSL_EMAIL`
 - **Owncast Data**: Stored in the Docker volume `owncast_data`.
 - **Caddy Data**: Stored in the Docker volume `owncast_caddy_data`.
 - **Service Setup**:
@@ -48,6 +47,12 @@ The `postinstall.sh` script configures Owncast with custom settings, such as str
 - Disable search indexing.
 - Disable chat.
 - Remove social handles and tags.
+
+Run the script inside the directory your `.env` file is located.
+
+   ```bash
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/oszuidwest/zwtv-owncast/main/postinstall.sh)"
+   ```
 
 ### Tune CPU for maximal performace
 Video transcoding is an intensive process. To ensure the maximal stability, tune the CPU for maximal performance. This only works on machines with physical cpus, not virtualized machines or containers. Do the following:
