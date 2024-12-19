@@ -1,6 +1,8 @@
 name: Docker Compose linter
 on:
   push:
+    branches:
+      - main
     paths:
       - 'docker-compose.yml'
   pull_request:
