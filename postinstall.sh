@@ -58,6 +58,7 @@ DISABLE_CHAT_API_URL="https://${SSL_HOSTNAME}/api/admin/config/chat/disable"
 REMOVE_SOCIAL_HANDLES_API_URL="https://${SSL_HOSTNAME}/api/admin/config/socialhandles"
 REMOVE_TAGS_API_URL="https://${SSL_HOSTNAME}/api/admin/config/tags"
 DISABLE_JOIN_MESSAGES_API_URL="https://${SSL_HOSTNAME}/api/admin/config/chat/joinmessagesenabled"
+PAGE_CONTENT_API_URL="https://${SSL_HOSTNAME}/api/admin/config/pagecontent"
 
 # JSON Payloads
 STREAM_JSON_PAYLOAD=$(cat <<EOF
@@ -126,6 +127,7 @@ DISABLE_CHAT_PAYLOAD='{"value": true}'
 REMOVE_SOCIAL_HANDLES_PAYLOAD='{"value": []}'
 REMOVE_TAGS_PAYLOAD='{"value": []}'
 DISABLE_JOIN_MESSAGES_PAYLOAD='{"value": false}'
+PAGE_CONTENT_PAYLOAD='{"value": ""}'
 
 # Function to perform POST requests
 perform_post() {
@@ -157,3 +159,4 @@ perform_post "${DISABLE_CHAT_API_URL}" "${DISABLE_CHAT_PAYLOAD}" "Disable Chat"
 perform_post "${REMOVE_SOCIAL_HANDLES_API_URL}" "${REMOVE_SOCIAL_HANDLES_PAYLOAD}" "Remove Social Handles"
 perform_post "${REMOVE_TAGS_API_URL}" "${REMOVE_TAGS_PAYLOAD}" "Remove Tags"
 perform_post "${DISABLE_JOIN_MESSAGES_API_URL}" "${DISABLE_JOIN_MESSAGES_PAYLOAD}" "Disable Join Messages"
+perform_post "${PAGE_CONTENT_API_URL}" "${PAGE_CONTENT_PAYLOAD}" "Clear Page Content"
