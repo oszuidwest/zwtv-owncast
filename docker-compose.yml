@@ -3,6 +3,8 @@ services:
   caddy:
     image: caddy:alpine
     container_name: caddy
+    environment:
+      - TZ=Europe/Amsterdam
     volumes:
       - caddy-data:/data
     ports:
@@ -18,6 +20,8 @@ services:
   owncast:
     image: owncast/owncast:0.1.3
     container_name: owncast
+    environment:
+      - TZ=Europe/Amsterdam
     volumes:
       - owncast-data:/app/data
     ports:
