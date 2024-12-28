@@ -5,6 +5,8 @@ services:
     container_name: caddy
     volumes:
       - caddy-data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     ports:
       - '80:80'
       - '443:443'
@@ -20,6 +22,8 @@ services:
     container_name: owncast
     volumes:
       - owncast-data:/app/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     ports:
       - '1935:1935'
     networks:
