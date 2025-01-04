@@ -3,13 +3,15 @@
 # Files to download
 FUNCTIONS_LIB_URL="https://raw.githubusercontent.com/oszuidwest/bash-functions/main/common-functions.sh"
 DOCKER_COMPOSE_URL="https://raw.githubusercontent.com/oszuidwest/zwtv-owncast/main/docker-compose.yml"
+CADDYFILE_URL="https://raw.githubusercontent.com/oszuidwest/zwtv-owncast/main/Caddyfile"
 ENV_EXAMPLE_URL="https://raw.githubusercontent.com/oszuidwest/zwtv-owncast/main/.env.example"
 
 # Constants
 FUNCTIONS_LIB_PATH="/tmp/functions.sh"
 INSTALL_DIR="/opt/owncast"
-ENV_FILE="${INSTALL_DIR}/.env"
 COMPOSE_FILE="${INSTALL_DIR}/docker-compose.yml"
+CADDY_FILE="${INSTALL_DIR}/Caddyfile"
+ENV_FILE="${INSTALL_DIR}/.env"
 
 # Remove old functions library and download the latest version
 rm -f "$FUNCTIONS_LIB_PATH"
@@ -53,6 +55,7 @@ echo -e "${GREEN}⎎ Dockerized Owncast for ZuidWest TV${NC}\n\n"
 ask_user "DO_UPDATES" "y" "Do you want to perform all OS updates? (y/n)" "y/n"
 ask_user "STREAM_KEY" "hackme123" "Pick a stream key for Owncast" "str"
 ask_user "ADMIN_PASSWORD" "admin123" "Choose an admin password for Owncast" "str"
+ask_user "ADMIN_IPS" "x.x.x.x" "From which IPs should Owncast be accessible? Separate multiple IPs with a space" "str"
 ask_user "SSL_HOSTNAME" "owncast.local" "Specify a hostname for the proxy (for example: owncast.example.org)" "host"
 
 # Set system timezone
@@ -74,6 +77,13 @@ if ! curl -s -o "${COMPOSE_FILE}" "${DOCKER_COMPOSE_URL}"; then
   exit 1
 fi
 
+# Download Caddyfile
+echo -e "${BLUE}►► Downloading Caddyfile"
+if ! curl -s -o "${CADDY_FILE}" "${CADDYFILE_URL}"; then
+  echo -e "${RED}*** Failed to download Caddyfile. Please check your network connection! ***${NC}"
+  exit 1
+fi
+
 # Download the .env.example file
 echo -e "${BLUE}►► Downloading .env.example and renaming it to .env${NC}"
 if ! curl -s -o "${ENV_FILE}" "${ENV_EXAMPLE_URL}"; then
@@ -84,6 +94,7 @@ fi
 # Fill in the .env file with user-provided values
 echo -e "${BLUE}►► Filling in the .env file with provided values${NC}"
 sed -i "s|ADMIN_PASSWORD=.*|ADMIN_PASSWORD=${ADMIN_PASSWORD}|g" "${ENV_FILE}"
+sed -i "s|ADMIN_IPS=.*|ADMIN_IPS=${ADMIN_IPS}|g" "${ENV_FILE}"
 sed -i "s|STREAM_KEY=.*|STREAM_KEY=${STREAM_KEY}|g" "${ENV_FILE}"
 sed -i "s|SSL_HOSTNAME=.*|SSL_HOSTNAME=${SSL_HOSTNAME}|g" "${ENV_FILE}"
 

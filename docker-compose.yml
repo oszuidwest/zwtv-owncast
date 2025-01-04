@@ -16,6 +16,9 @@ services:
     restart: unless-stopped
     cap_add:
       - NET_ADMIN
+    environment:
+      - SSL_HOSTNAME=${SSL_HOSTNAME}
+      - ADMIN_IPS=${ADMIN_IPS}
   owncast:
     image: owncast/owncast:0.1.3
     container_name: owncast

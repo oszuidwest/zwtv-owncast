@@ -1,0 +1,12 @@
+{$SSL_HOSTNAME} {
+    @denyAll {
+        not remote_ip {$ADMIN_IPS}
+        not path /hls*
+    }
+
+    route @denyAll {
+        respond "Access Denied" 403
+    }
+
+    reverse_proxy owncast:8080
+}
