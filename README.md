@@ -6,10 +6,11 @@ A Dockerized installer for Owncast, designed for [ZuidWest TV](https://www.zuidw
 
 - **Working Directory**: `/opt/owncast/`
 - **Environment Configuration**:
-  - The `.env` file is located in `/opt/owncast/` and includes all required environment variables:
-    - `STREAM_KEY`
-    - `ADMIN_PASSWORD`
-    - `SSL_HOSTNAME`
+  - The `.env` file is located in the `/opt/owncast/` directory and contains all the necessary environment variables:
+    - `STREAM_KEY` (RTMP key for Owncast)
+    - `ADMIN_PASSWORD` (Password for the Owncast admin interface)
+    - `SSL_HOSTNAME` (The server’s hostname (without including `http://` or `https://`))
+    - `ADMIN_IPS` (One or more IP addresses that should be permitted to access the admin interface, separated by spaces)
 - **Owncast Data**: Stored in the Docker volume `owncast_data`.
 - **Caddy Data**: Stored in the Docker volume `owncast_caddy_data`.
 - **Service Setup**:
@@ -35,7 +36,7 @@ Choose your preferred method below ⬇️
 
 ### I Know What I'm Doing
 
-Download the `docker-compose.yml` and `.env.example` files from the repository and configure them as needed.
+Download the `docker-compose.yml`, `.env.example` and `Caddyfile` files from the repository and configure them as needed.
 
 ## Script for Bulk Configuration
 
