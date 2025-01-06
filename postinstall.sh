@@ -50,15 +50,15 @@ USERNAME="admin"
 PASSWORD="${ADMIN_PASSWORD}"
 
 # API URLs
-STREAM_API_URL="https://${SSL_HOSTNAME}/api/admin/config/video/streamoutputvariants"
-NOTIFICATION_API_URL="https://${SSL_HOSTNAME}/api/admin/config/notifications/browser"
-HIDE_VIEWER_COUNT_API_URL="https://${SSL_HOSTNAME}/api/admin/config/hideviewercount"
-DISABLE_SEARCH_API_URL="https://${SSL_HOSTNAME}/api/admin/config/disablesearchindexing"
-DISABLE_CHAT_API_URL="https://${SSL_HOSTNAME}/api/admin/config/chat/disable"
-REMOVE_SOCIAL_HANDLES_API_URL="https://${SSL_HOSTNAME}/api/admin/config/socialhandles"
-REMOVE_TAGS_API_URL="https://${SSL_HOSTNAME}/api/admin/config/tags"
-DISABLE_JOIN_MESSAGES_API_URL="https://${SSL_HOSTNAME}/api/admin/config/chat/joinmessagesenabled"
-PAGE_CONTENT_API_URL="https://${SSL_HOSTNAME}/api/admin/config/pagecontent"
+STREAM_API_URL="${BASE_URL}/api/admin/config/video/streamoutputvariants"
+NOTIFICATION_API_URL="${BASE_URL}/api/admin/config/notifications/browser"
+HIDE_VIEWER_COUNT_API_URL="${BASE_URL}/api/admin/config/hideviewercount"
+DISABLE_SEARCH_API_URL="${BASE_URL}/api/admin/config/disablesearchindexing"
+DISABLE_CHAT_API_URL="${BASE_URL}/api/admin/config/chat/disable"
+REMOVE_SOCIAL_HANDLES_API_URL="${BASE_URL}/api/admin/config/socialhandles"
+REMOVE_TAGS_API_URL="${BASE_URL}/api/admin/config/tags"
+DISABLE_JOIN_MESSAGES_API_URL="${BASE_URL}/api/admin/config/chat/joinmessagesenabled"
+PAGE_CONTENT_API_URL="${BASE_URL}/api/admin/config/pagecontent"
 
 # JSON Payloads
 STREAM_JSON_PAYLOAD=$(cat <<EOF

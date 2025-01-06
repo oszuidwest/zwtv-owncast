@@ -49,11 +49,17 @@ The `postinstall.sh` script configures Owncast with custom settings, such as str
 - Disable chat.
 - Remove social handles and tags.
 
-Run the script inside the directory your `.env` file is located.
+Run this command to apply the settings:
 
    ```bash
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/oszuidwest/zwtv-owncast/main/postinstall.sh)"
+   docker run --rm \
+    --volume /opt/owncast/.env:/.env \
+    --network owncast_backend \
+    -e BASE_URL=http://owncast:8080 \
+    alpine sh -c "apk add --no-cache bash curl && bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/oszuidwest/zwtv-owncast/main/postinstall.sh)\""
    ```
+
+_If you've changed the network or container name, update the command_
 
 ### Tune CPU for maximal performace
 Video transcoding is an intensive process. To ensure the maximal stability, tune the CPU for maximal performance. This only works on machines with physical cpus, not virtualized machines or containers. Do the following:
