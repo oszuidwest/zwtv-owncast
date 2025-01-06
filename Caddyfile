@@ -2,6 +2,7 @@
     @denyAll {
         not remote_ip {$ADMIN_IPS}
         not path /hls*
+        not path /thumbnail.jpg
     }
 
     route @denyAll {
