@@ -7,12 +7,12 @@ services:
       - caddy-data:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+      - ./Caddyfile:/etc/caddy/Caddyfile
     ports:
       - '0.0.0.0:80:80'
       - '0.0.0.0:443:443'
     networks:
       - backend
-    command: caddy reverse-proxy --from ${SSL_HOSTNAME} --to owncast:8080
     restart: unless-stopped
     cap_add:
       - NET_ADMIN
