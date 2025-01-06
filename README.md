@@ -33,6 +33,7 @@ Choose your preferred method below ⬇️
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/oszuidwest/zwtv-owncast/main/install.sh)"
    ```
 4. The installer will set everything up for you automatically.
+5. As the last step it'll ask you if you want to start the services. If you choose to do so, it'll also ask you if you want to run the postinstall script.
 
 ### I Know What I'm Doing
 
@@ -40,7 +41,7 @@ Download the `docker-compose.yml`, `.env.example` and `Caddyfile` files from the
 
 ## Script for Bulk Configuration
 
-The `postinstall.sh` script configures Owncast with custom settings, such as stream output variants. You will need to run the script manually. It sets these settings:
+The `postinstall.sh` script configures Owncast with custom settings, such as stream output variants. The install script asks you if you want to run this script. If you choose not to do so, and want to do it manually later, you can do so with the command below. It sets these settings:
 
 - 4 stream output variants (360p, 480p, 720p 1080p).
 - Disable browser notifications.

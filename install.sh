@@ -103,3 +103,25 @@ echo -e "\n\n${GREEN}✓ Installation set up at ${INSTALL_DIR}${NC}"
 echo -e "${YELLOW}The .env file has been populated with the values you provided.${NC}"
 echo -e "${YELLOW}To start Owncast and Caddy, navigate to ${INSTALL_DIR} and run:${NC}"
 echo -e "${YELLOW}docker compose up -d${NC}\n"
+
+# Start Owncast and Caddy
+ask_user "START_OWNCAST" "y" "Do you want to start Owncast and Caddy now? (y/n)" "y/n"
+if [ "$START_OWNCAST" == "y" ]; then
+  cd "${INSTALL_DIR}" || exit
+  docker compose up -d
+
+  ask_user "RUN_POSTINSTALL" "y" "Do you want to run the postinstall script? (y/n)" "y/n"
+
+  # Run the postinstall script if requested by the user
+  if [ "$RUN_POSTINSTALL" == "y" ]; then
+    echo -e "${BLUE}►► Waiting for Owncast to start${NC}"
+    sleep 10
+
+    echo -e "${BLUE}►► Running postinstall script${NC}"
+    docker run --rm \
+      --volume /opt/owncast/.env:/.env \
+      --network owncast_backend \
+      -e BASE_URL=http://owncast:8080 \
+      alpine sh -c "apk add --no-cache bash curl && bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/oszuidwest/zwtv-owncast/main/postinstall.sh)\""
+  fi
+fi
