@@ -1,6 +1,6 @@
 # zwtv-owncast
 
-A Dockerized installer for Owncast, designed for [ZuidWest TV](https://www.zuidwesttv.nl/) and [Rucphen RTV](https://www.rucphenrtv.nl/). This project serves as a replacement for [nginx-rtmp-live](https://github.com/oszuidwest/nginx-rtmp-live).
+A Dockerized installer for Owncast, designed for [ZuidWest TV](https://www.zuidwesttv.nl/), [Rucphen RTV](https://www.rucphenrtv.nl/) and [BredaNu](https://www.bredanu.nl/). This project serves as a replacement for [nginx-rtmp-live](https://github.com/oszuidwest/nginx-rtmp-live).
 
 ## Conventions
 
