@@ -6,6 +6,7 @@
     }
 
     route @denyAll {
+        header X-Robots-Tag "None"
         respond "Access Denied" 403
     }
 
