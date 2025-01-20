@@ -64,8 +64,9 @@ _If you've changed the network or container name, update the command_
 
 ### Tune CPU for maximal performace
 Video transcoding is an intensive process. To ensure the maximal stability, tune the CPU for maximal performance. This only works on machines with physical cpus, not virtualized machines or containers. Do the following:
-- Install cpupower with `apt install linux-cpupower`
-- Tune the CPU for performance `cpupower frequency-set -g performance`
+
+1. Install cpupower: `apt install linux-cpupower`
+2. Tune the CPU for performance: `cpupower frequency-set -g performance`
 
 To ensure it remains tuned for maximal performance after reboots, add a service file:
 ```
@@ -79,3 +80,5 @@ ExecStart=/usr/bin/cpupower frequency-set -g performance
 WantedBy=multi-user.target
 EOF
 ```
+3. Reload the systemd configuration to make the new service recognizable: `systemctl daemon-reload`
+4. Enable the service to ensure it starts automatically at boot: `systemctl start cpupower.service`
