@@ -90,20 +90,20 @@ STREAM_JSON_PAYLOAD=$(cat <<EOF
             "name": "High",
             "videoPassthrough": false,
             "audioPassthrough": true,
-            "videoBitrate": 3500,
+            "videoBitrate": 4000,
             "audioBitrate": 0,
             "scaledWidth": 1280,
             "scaledHeight": 720,
-            "cpuUsageLevel": 2,
+            "cpuUsageLevel": 4,
             "framerate": 25
         },
         {
             "name": "Ultra",
             "videoPassthrough": false,
             "audioPassthrough": true,
-            "videoBitrate": 5000,
+            "videoBitrate": 6000,
             "audioBitrate": 0,
-            "cpuUsageLevel": 2,
+            "cpuUsageLevel": 4,
             "framerate": 25
         }
     ]
