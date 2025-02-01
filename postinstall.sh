@@ -94,7 +94,7 @@ STREAM_JSON_PAYLOAD=$(cat <<EOF
             "audioBitrate": 0,
             "scaledWidth": 1280,
             "scaledHeight": 720,
-            "cpuUsageLevel": 4,
+            "cpuUsageLevel": 2,
             "framerate": 25
         },
         {
@@ -103,7 +103,7 @@ STREAM_JSON_PAYLOAD=$(cat <<EOF
             "audioPassthrough": true,
             "videoBitrate": 6000,
             "audioBitrate": 0,
-            "cpuUsageLevel": 4,
+            "cpuUsageLevel": 2,
             "framerate": 25
         }
     ]
