@@ -8,17 +8,18 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - ./Caddyfile:/etc/caddy/Caddyfile
+    environment:
+      - SSL_HOSTNAME=${SSL_HOSTNAME}
+      - ADMIN_IPS=${ADMIN_IPS}
     ports:
-      - '0.0.0.0:80:80'
-      - '0.0.0.0:443:443'
+      - '80:80'
+      - '443:443'
     networks:
       - backend
     restart: unless-stopped
     cap_add:
       - NET_ADMIN
-    environment:
-      - SSL_HOSTNAME=${SSL_HOSTNAME}
-      - ADMIN_IPS=${ADMIN_IPS}
+
   owncast:
     image: owncast/owncast:0.2.1
     container_name: owncast
@@ -27,16 +28,18 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     ports:
-      - '0.0.0.0:1935:1935'
+      - '1935:1935'
     networks:
       - backend
     command: -streamkey ${STREAM_KEY} -adminpassword ${ADMIN_PASSWORD}
     restart: unless-stopped
     expose:
       - '8080'
+
 networks:
   backend:
     name: owncast_backend
+
 volumes:
   caddy-data:
     name: owncast_caddy_data
