@@ -1,0 +1,62 @@
+name: Owncast Auto-Update
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+jobs:
+  update-owncast:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Get current Owncast version
+        id: current-version
+        run: |
+          CURRENT_VERSION=$(grep -oP 'owncast/owncast:\K[0-9.]+' docker-compose.yml)
+          echo "Current version: $CURRENT_VERSION"
+          echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Get latest Owncast version
+        id: latest-version
+        run: |
+          LATEST_VERSION=$(curl -s https://hub.docker.com/v2/repositories/owncast/owncast/tags?page_size=100 | 
+                          jq -r '.results[].name' | 
+                          grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | 
+                          sort -V | 
+                          tail -1)
+          echo "Latest version: $LATEST_VERSION"
+          echo "version=$LATEST_VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Compare versions and update if needed
+        id: compare
+        run: |
+          CURRENT_VERSION="${{ steps.current-version.outputs.version }}"
+          LATEST_VERSION="${{ steps.latest-version.outputs.version }}"
+          
+          # Compare versions
+          if [ $(echo "$CURRENT_VERSION $LATEST_VERSION" | tr ' ' '\n' | sort -V | head -1) = "$CURRENT_VERSION" ] && [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
+            echo "Update needed from $CURRENT_VERSION to $LATEST_VERSION"
+            echo "update_needed=true" >> $GITHUB_OUTPUT
+          else
+            echo "No update needed, current version is up to date or newer"
+            echo "update_needed=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Update docker-compose.yml
+        if: steps.compare.outputs.update_needed == 'true'
+        run: |
+          CURRENT_VERSION="${{ steps.current-version.outputs.version }}"
+          LATEST_VERSION="${{ steps.latest-version.outputs.version }}"
+          
+          # Update docker-compose.yml
+          sed -i "s|owncast/owncast:$CURRENT_VERSION|owncast/owncast:$LATEST_VERSION|g" docker-compose.yml
+          echo "Updated docker-compose.yml from version $CURRENT_VERSION to $LATEST_VERSION"
+      
+      - name: Commit and push changes
+        if: steps.compare.outputs.update_needed == 'true'
+        run: |
+          git config --local user.email "github-actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git commit -am "Update Owncast from v${{ steps.current-version.outputs.version }} to v${{ steps.latest-version.outputs.version }}"
+          git push
