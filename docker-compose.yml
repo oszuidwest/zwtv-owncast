@@ -21,7 +21,7 @@ services:
       - NET_ADMIN
 
   owncast:
-    image: owncast/owncast:0.2.1
+    image: owncast/owncast:0.2.2
     container_name: owncast
     volumes:
       - owncast-data:/app/data
