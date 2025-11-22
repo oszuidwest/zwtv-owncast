@@ -2,14 +2,16 @@
 
 # Files to download
 FUNCTIONS_LIB_URL="https://raw.githubusercontent.com/oszuidwest/bash-functions/main/common-functions.sh"
-FUNCTIONS_LIB_PATH="/tmp/functions.sh"
+FUNCTIONS_LIB_PATH=$(mktemp)
+
+# Clean up temporary file on exit
+trap 'rm -f "$FUNCTIONS_LIB_PATH"' EXIT
 
 # Constants
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENV_FILE="${SCRIPT_DIR}/.env"
 
-# Remove old functions library and download the latest version
-rm -f "$FUNCTIONS_LIB_PATH"
+# Download the functions library
 if ! curl -s -o "$FUNCTIONS_LIB_PATH" "$FUNCTIONS_LIB_URL"; then
   echo -e "*** Failed to download functions library. Please check your network connection! ***"
   exit 1
