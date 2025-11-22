@@ -70,7 +70,7 @@ fi
 
 # Create the installation directory
 echo -e "${BLUE}►► Creating installation directory: ${INSTALL_DIR}${NC}"
-mkdir -p ${INSTALL_DIR}
+mkdir -p "${INSTALL_DIR}"
 
 # Download docker-compose.yml
 echo -e "${BLUE}►► Downloading docker-compose.yml"
@@ -99,6 +99,9 @@ sed -i "s|ADMIN_PASSWORD=.*|ADMIN_PASSWORD=${ADMIN_PASSWORD}|g" "${ENV_FILE}"
 sed -i "s|ADMIN_IPS=.*|ADMIN_IPS=${ADMIN_IPS}|g" "${ENV_FILE}"
 sed -i "s|STREAM_KEY=.*|STREAM_KEY=${STREAM_KEY}|g" "${ENV_FILE}"
 sed -i "s|SSL_HOSTNAME=.*|SSL_HOSTNAME=${SSL_HOSTNAME}|g" "${ENV_FILE}"
+
+# Restrict permissions on .env file (contains credentials)
+chmod 600 "${ENV_FILE}"
 
 # Instructions for next steps
 echo -e "\n\n${GREEN}✓ Installation set up at ${INSTALL_DIR}${NC}"
