@@ -112,6 +112,13 @@ echo -e "${YELLOW}The .env file has been populated with the values you provided.
 prompt_user "START_OWNCAST" "y" "Start Owncast and Caddy now? (y/n)" "y/n"
 if [ "$START_OWNCAST" == "y" ]; then
   cd "${INSTALL_DIR}" || exit
+
+  # Stop existing containers if running (handles upgrades)
+  if docker compose ps -q 2>/dev/null | grep -q .; then
+    echo -e "${BLUE}►► Stopping existing containers${NC}"
+    docker compose down
+  fi
+
   docker compose up -d
 
   prompt_user "RUN_POSTINSTALL" "y" "Run the postinstall script? (y/n)" "y/n"
