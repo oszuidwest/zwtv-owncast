@@ -35,6 +35,8 @@ Choose your preferred method below ⬇️
 4. The installer will set everything up for you automatically.
 5. As the last step it'll ask you if you want to start the services. If you choose to do so, it'll also ask you if you want to run the postinstall script.
 
+To upgrade an existing installation, simply re-run the installer. It will detect your existing configuration and offer to preserve it.
+
 ### I Know What I'm Doing
 
 Download the `docker-compose.yml`, `.env.example` and `Caddyfile` files from the repository and configure them as needed.
