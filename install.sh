@@ -57,9 +57,40 @@ echo -e "${GREEN}⎎ Dockerized Owncast for ZuidWest TV${NC}\n\n"
 
 # Detect existing installation
 EXISTING_INSTALL="n"
+CONTAINERS_RUNNING="n"
 if [ -f "${ENV_FILE}" ] || [ -f "${COMPOSE_FILE}" ] || docker ps -a --format '{{.Names}}' 2>/dev/null | grep -qE '^(owncast|caddy)$'; then
   EXISTING_INSTALL="y"
   echo -e "${YELLOW}Existing installation detected.${NC}\n"
+fi
+
+# Check if containers are currently running
+if docker ps --format '{{.Names}}' 2>/dev/null | grep -qE '^(owncast|caddy)$'; then
+  CONTAINERS_RUNNING="y"
+  echo -e "${YELLOW}Owncast is currently running. Continuing will stop the stream.${NC}"
+  prompt_user "CONTINUE_INSTALL" "y" "Continue with installation? (y/n)" "y/n"
+  if [ "$CONTINUE_INSTALL" != "y" ]; then
+    echo -e "${YELLOW}Installation cancelled.${NC}"
+    exit 0
+  fi
+  echo ""
+fi
+
+# Handle orphaned containers (running but no .env file)
+if [ "$CONTAINERS_RUNNING" == "y" ] && [ ! -f "${ENV_FILE}" ]; then
+  echo -e "${BLUE}►► Stopping orphaned containers before proceeding${NC}"
+  cd "${INSTALL_DIR}" 2>/dev/null || true
+  if ! docker compose down --timeout 30 2>/dev/null; then
+    echo -e "${YELLOW}  Normal shutdown failed, forcing removal${NC}"
+    docker compose down --remove-orphans --timeout 10 2>/dev/null || true
+    docker rm -f owncast caddy 2>/dev/null || true
+  fi
+  # Verify containers are stopped
+  if docker ps --format '{{.Names}}' 2>/dev/null | grep -qE '^(owncast|caddy)$'; then
+    echo -e "${RED}*** Failed to stop existing containers. Please stop them manually and try again. ***${NC}"
+    exit 1
+  fi
+  CONTAINERS_RUNNING="n"
+  echo ""
 fi
 
 # Ask for user input
@@ -162,6 +193,11 @@ if [ "$START_OWNCAST" == "y" ]; then
       echo -e "${YELLOW}  Normal shutdown failed, forcing removal${NC}"
       docker compose down --remove-orphans --timeout 10 2>/dev/null || true
       docker rm -f owncast caddy 2>/dev/null || true
+    fi
+    # Verify containers are stopped
+    if docker ps --format '{{.Names}}' 2>/dev/null | grep -qE '^(owncast|caddy)$'; then
+      echo -e "${RED}*** Failed to stop existing containers. Please stop them manually and try again. ***${NC}"
+      exit 1
     fi
   fi
 
