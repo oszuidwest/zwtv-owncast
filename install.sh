@@ -98,6 +98,11 @@ prompt_user "DO_UPDATES" "y" "Perform OS updates? (y/n)" "y/n"
 
 # Handle configuration based on existing installation
 KEEP_CONFIG="n"
+# DEBUG
+echo "DEBUG: EXISTING_INSTALL=${EXISTING_INSTALL}"
+echo "DEBUG: ENV_FILE=${ENV_FILE}"
+echo "DEBUG: File exists check: $([ -f "${ENV_FILE}" ] && echo 'true' || echo 'false')"
+# END DEBUG
 if [ "$EXISTING_INSTALL" == "y" ] && [ -f "${ENV_FILE}" ]; then
   prompt_user "KEEP_CONFIG" "y" "Keep existing configuration? (y/n)" "y/n"
 fi
