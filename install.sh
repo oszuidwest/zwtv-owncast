@@ -102,10 +102,14 @@ KEEP_CONFIG="n"
 echo "DEBUG: EXISTING_INSTALL=${EXISTING_INSTALL}"
 echo "DEBUG: ENV_FILE=${ENV_FILE}"
 echo "DEBUG: File exists check: $([ -f "${ENV_FILE}" ] && echo 'true' || echo 'false')"
+echo "DEBUG: Entering KEEP_CONFIG check..."
 # END DEBUG
 if [ "$EXISTING_INSTALL" == "y" ] && [ -f "${ENV_FILE}" ]; then
+  echo "DEBUG: Inside if block, calling prompt_user KEEP_CONFIG"
   prompt_user "KEEP_CONFIG" "y" "Keep existing configuration? (y/n)" "y/n"
+  echo "DEBUG: After prompt_user, KEEP_CONFIG=${KEEP_CONFIG}"
 fi
+echo "DEBUG: Final KEEP_CONFIG=${KEEP_CONFIG}"
 
 if [ "$KEEP_CONFIG" == "n" ]; then
   # Fresh install or user wants to reconfigure
