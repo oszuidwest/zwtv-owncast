@@ -61,6 +61,9 @@ if [ -z "${SSL_HOSTNAME}" ]; then
   exit 1
 fi
 
+# Set BASE_URL from SSL_HOSTNAME if not already set (for direct execution on host)
+: "${BASE_URL:=https://${SSL_HOSTNAME}}"
+
 # Owncast data
 USERNAME="admin"
 PASSWORD="${ADMIN_PASSWORD}"
