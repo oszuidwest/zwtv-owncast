@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Files to download
-FUNCTIONS_LIB_URL="https://raw.githubusercontent.com/oszuidwest/bash-functions/main/common-functions.sh"
+FUNCTIONS_LIB_URL="https://raw.githubusercontent.com/oszuidwest/bash-functions/v2/common-functions.sh"
 DOCKER_COMPOSE_URL="https://raw.githubusercontent.com/oszuidwest/zwtv-owncast/main/docker-compose.yml"
 CADDYFILE_URL="https://raw.githubusercontent.com/oszuidwest/zwtv-owncast/main/Caddyfile"
 ENV_EXAMPLE_URL="https://raw.githubusercontent.com/oszuidwest/zwtv-owncast/main/.env.example"
@@ -30,13 +30,14 @@ source "$FUNCTIONS_LIB_PATH"
 set_colors
 
 # Check if the script is running as root
-check_user_privileges privileged
+assert_user_privileged "root"
 
-# Ensure the script is running on a supported platform (Linux)
-is_this_linux
+# Ensure the script is running on a supported platform (Linux, 64-bit)
+assert_os_linux
+assert_os_64bit
 
-# Check if docker is installed 
-require_tool "docker"
+# Check if docker is installed
+assert_tool "docker"
 
 # Clear the terminal
 clear
@@ -54,18 +55,18 @@ EOF
 echo -e "${GREEN}⎎ Dockerized Owncast for ZuidWest TV${NC}\n\n"
 
 # Ask for user input
-ask_user "DO_UPDATES" "y" "Do you want to perform all OS updates? (y/n)" "y/n"
-ask_user "STREAM_KEY" "hackme123" "Pick a stream key for Owncast" "str"
-ask_user "ADMIN_PASSWORD" "admin123" "Choose an admin password for Owncast" "str"
-ask_user "ADMIN_IPS" "x.x.x.x" "From which IPs should Owncast be accessible? Separate multiple IPs with a space" "str"
-ask_user "SSL_HOSTNAME" "owncast.local" "Specify a hostname for the proxy (for example: owncast.example.org)" "host"
+prompt_user "DO_UPDATES" "y" "Perform OS updates? (y/n)" "y/n"
+prompt_user "STREAM_KEY" "hackme123" "Owncast stream key" "str"
+prompt_user "ADMIN_PASSWORD" "admin123" "Owncast admin password" "str"
+prompt_user "ADMIN_IPS" "0.0.0.0/0" "IPs allowed to access Owncast admin (space-separated, 0.0.0.0/0 = allow all)" "str"
+prompt_user "SSL_HOSTNAME" "owncast.local" "Hostname for SSL proxy (e.g. owncast.example.org)" "host"
 
 # Set system timezone
 set_timezone Europe/Amsterdam
 
 # Perform OS updates if requested by the user
 if [ "$DO_UPDATES" == "y" ]; then
-  update_os silent
+  apt_update --silent
 fi
 
 # Create the installation directory
@@ -108,18 +109,15 @@ echo -e "\n\n${GREEN}✓ Installation set up at ${INSTALL_DIR}${NC}"
 echo -e "${YELLOW}The .env file has been populated with the values you provided.${NC}"
 
 # Start Owncast and Caddy
-ask_user "START_OWNCAST" "y" "Do you want to start Owncast and Caddy now? (y/n)" "y/n"
+prompt_user "START_OWNCAST" "y" "Start Owncast and Caddy now? (y/n)" "y/n"
 if [ "$START_OWNCAST" == "y" ]; then
   cd "${INSTALL_DIR}" || exit
   docker compose up -d
 
-  ask_user "RUN_POSTINSTALL" "y" "Do you want to run the postinstall script? (y/n)" "y/n"
+  prompt_user "RUN_POSTINSTALL" "y" "Run the postinstall script? (y/n)" "y/n"
 
   # Run the postinstall script if requested by the user
   if [ "$RUN_POSTINSTALL" == "y" ]; then
-    echo -e "${BLUE}►► Waiting for Owncast to start${NC}"
-    sleep 10
-
     echo -e "${BLUE}►► Running postinstall script${NC}"
     docker run --rm \
       --volume /opt/owncast/.env:/.env \
