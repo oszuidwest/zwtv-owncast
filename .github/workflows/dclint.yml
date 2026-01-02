@@ -9,6 +9,9 @@ on:
     paths:
       - 'docker-compose.yml'
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: lint
