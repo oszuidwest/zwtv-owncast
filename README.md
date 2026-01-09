@@ -11,6 +11,8 @@ A Dockerized installer for Owncast, designed for [ZuidWest TV](https://www.zuidw
     - `ADMIN_PASSWORD` (Password for the Owncast admin interface)
     - `SSL_HOSTNAME` (The server’s hostname (without including `http://` or `https://`))
     - `ADMIN_IPS` (One or more IP addresses that should be permitted to access the admin interface, separated by spaces)
+    - `STREAM_NAME` (Optional: The name of the stream)
+    - `LOGO_URL` (Optional: URL to the logo image for the stream)
 - **Owncast Data**: Stored in the Docker volume `owncast_data`.
 - **Caddy Data**: Stored in the Docker volume `owncast_caddy_data`.
 - **Service Setup**:
@@ -51,6 +53,8 @@ The `postinstall.sh` script configures Owncast with custom settings, such as str
 - Disable search indexing.
 - Disable chat.
 - Remove social handles and tags.
+- Set stream name (if configured).
+- Set logo (if configured).
 
 Run this command to apply the settings:
 

@@ -78,6 +78,8 @@ REMOVE_SOCIAL_HANDLES_API_URL="${BASE_URL}/api/admin/config/socialhandles"
 REMOVE_TAGS_API_URL="${BASE_URL}/api/admin/config/tags"
 DISABLE_JOIN_MESSAGES_API_URL="${BASE_URL}/api/admin/config/chat/joinmessagesenabled"
 PAGE_CONTENT_API_URL="${BASE_URL}/api/admin/config/pagecontent"
+NAME_API_URL="${BASE_URL}/api/admin/config/name"
+LOGO_API_URL="${BASE_URL}/api/admin/config/logo"
 
 # JSON Payloads
 STREAM_JSON_PAYLOAD=$(cat <<EOF
@@ -148,6 +150,16 @@ REMOVE_TAGS_PAYLOAD='{"value": []}'
 DISABLE_JOIN_MESSAGES_PAYLOAD='{"value": false}'
 PAGE_CONTENT_PAYLOAD='{"value": ""}'
 
+# Optional configurations for name and logo
+if [ -n "${STREAM_NAME}" ]; then
+    NAME_PAYLOAD="{\"value\": \"${STREAM_NAME}\"}"
+fi
+
+if [ -n "${LOGO_URL}" ]; then
+    BASE64_IMAGE=$(curl -s "$LOGO_URL" | base64 -w 0)
+    LOGO_PAYLOAD="{\"value\": \"data:image/jpeg;base64,$BASE64_IMAGE\"}"
+fi
+
 # Function to wait for Owncast to be ready
 wait_for_owncast() {
     echo -e "${BLUE}►► Waiting for Owncast to be ready (timeout: ${HEALTH_CHECK_TIMEOUT}s)...${NC}"
@@ -208,3 +220,13 @@ perform_post "${REMOVE_SOCIAL_HANDLES_API_URL}" "${REMOVE_SOCIAL_HANDLES_PAYLOAD
 perform_post "${REMOVE_TAGS_API_URL}" "${REMOVE_TAGS_PAYLOAD}" "Remove Tags"
 perform_post "${DISABLE_JOIN_MESSAGES_API_URL}" "${DISABLE_JOIN_MESSAGES_PAYLOAD}" "Disable Join Messages"
 perform_post "${PAGE_CONTENT_API_URL}" "${PAGE_CONTENT_PAYLOAD}" "Clear Page Content"
+
+# Optional: Set stream name if configured
+if [ -n "${STREAM_NAME}" ]; then
+    perform_post "${NAME_API_URL}" "${NAME_PAYLOAD}" "Set Stream Name"
+fi
+
+# Optional: Set logo if configured
+if [ -n "${LOGO_URL}" ]; then
+    perform_post "${LOGO_API_URL}" "${LOGO_PAYLOAD}" "Set Logo"
+fi

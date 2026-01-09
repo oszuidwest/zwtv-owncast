@@ -109,6 +109,8 @@ if [ "$KEEP_CONFIG" == "n" ]; then
   prompt_user "ADMIN_PASSWORD" "admin123" "Owncast admin password" "str"
   prompt_user "ADMIN_IPS" "0.0.0.0/0" "IPs allowed to access Owncast admin (space-separated, 0.0.0.0/0 = allow all)" "str"
   prompt_user "SSL_HOSTNAME" "owncast.local" "Hostname for SSL proxy (e.g. owncast.example.org)" "host"
+  prompt_user "STREAM_NAME" "" "Stream name (optional, leave empty to skip)" "str"
+  prompt_user "LOGO_URL" "" "Logo URL (optional, leave empty to skip)" "str"
 fi
 
 # Set system timezone
@@ -169,6 +171,8 @@ else
   sed -i "s|ADMIN_IPS=.*|ADMIN_IPS=${ADMIN_IPS}|g" "${ENV_FILE}"
   sed -i "s|STREAM_KEY=.*|STREAM_KEY=${STREAM_KEY}|g" "${ENV_FILE}"
   sed -i "s|SSL_HOSTNAME=.*|SSL_HOSTNAME=${SSL_HOSTNAME}|g" "${ENV_FILE}"
+  sed -i "s|STREAM_NAME=.*|STREAM_NAME=${STREAM_NAME}|g" "${ENV_FILE}"
+  sed -i "s|LOGO_URL=.*|LOGO_URL=${LOGO_URL}|g" "${ENV_FILE}"
 fi
 
 # Restrict permissions on .env file (contains credentials)
