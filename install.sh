@@ -112,24 +112,30 @@ if [ "$KEEP_CONFIG" == "n" ]; then
   prompt_user "STREAM_NAME" "none" "Stream name (optional, leave empty to skip)" "str"
   prompt_user "LOGO_URL" "none" "Logo URL (optional, leave empty to skip)" "str"
   prompt_user "S3_ENDPOINT" "none" "S3 endpoint (optional, leave empty to skip S3)" "str"
-  prompt_user "S3_ACCESS_KEY" "none" "S3 access key" "str"
-  prompt_user "S3_SECRET_KEY" "none" "S3 secret key" "str"
-  prompt_user "S3_BUCKET" "none" "S3 bucket name" "str"
+if [ "$S3_ENDPOINT" != "none" ]; then
+  prompt_user "S3_ACCESS_KEY" "" "S3 access key" "str"
+  prompt_user "S3_SECRET_KEY" "" "S3 secret key" "str"
+  prompt_user "S3_BUCKET" "" "S3 bucket name" "str"
   prompt_user "S3_REGION" "auto" "S3 region (default: auto)" "str"
   prompt_user "S3_ACL" "private" "S3 ACL (default: private)" "str"
-  prompt_user "S3_PATH_PREFIX" "none" "S3 path prefix (optional)" "str"
+  prompt_user "S3_PATH_PREFIX" "" "S3 path prefix (optional)" "str"
   prompt_user "S3_FORCE_PATH_STYLE" "false" "S3 force path style (true/false, default: false)" "str"
-  prompt_user "VIDEO_SERVING_ENDPOINT" "none" "Video serving endpoint (optional)" "str"
+  prompt_user "VIDEO_SERVING_ENDPOINT" "" "Video serving endpoint (optional)" "str"
+else
+  S3_ENDPOINT=""
+  S3_ACCESS_KEY=""
+  S3_SECRET_KEY=""
+  S3_BUCKET=""
+  S3_REGION="auto"
+  S3_ACL="private"
+  S3_PATH_PREFIX=""
+  S3_FORCE_PATH_STYLE="false"
+  VIDEO_SERVING_ENDPOINT=""
+fi
 
   # Convert 'none' to empty strings for optional fields
   if [ "$STREAM_NAME" = "none" ]; then STREAM_NAME=""; fi
   if [ "$LOGO_URL" = "none" ]; then LOGO_URL=""; fi
-  if [ "$S3_ENDPOINT" = "none" ]; then S3_ENDPOINT=""; fi
-  if [ "$S3_ACCESS_KEY" = "none" ]; then S3_ACCESS_KEY=""; fi
-  if [ "$S3_SECRET_KEY" = "none" ]; then S3_SECRET_KEY=""; fi
-  if [ "$S3_BUCKET" = "none" ]; then S3_BUCKET=""; fi
-  if [ "$S3_PATH_PREFIX" = "none" ]; then S3_PATH_PREFIX=""; fi
-  if [ "$VIDEO_SERVING_ENDPOINT" = "none" ]; then VIDEO_SERVING_ENDPOINT=""; fi
 fi
 
 # Set system timezone
