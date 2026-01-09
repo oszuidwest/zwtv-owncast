@@ -113,13 +113,16 @@ To configure it:
 3. **Set Up DNS and Custom Domain (Optional but Recommended)**:
    - In R2, set a custom domain for the bucket to enable direct access (e.g., `media.yourdomain.com`).
 
-4. **Configure Caching (for Performance and Cost Savings)**:
+4. **Configure CORS**:
+   - In the R2 bucket settings, configure CORS rules to allow access from your domain (e.g., allow GET requests from `https://yourdomain.com`). This is necessary for web players to access the media files directly from the browser.
+
+5. **Configure Caching (for Performance and Cost Savings)**:
    - In Cloudflare Rulesets (under Rules > Page Rules or Custom Rules), create rules to cache media files. This ensures that repeated requests for the same video segments are served from Cloudflare's edge network instead of hitting your R2 bucket directly, reducing request counts and keeping usage well within R2's free tier.
      - Cache all requests to `media.yourdomain.com` with edge TTL of 3600s and browser TTL of 3600s.
      - Special rule for `.m3u8` (playlists): Edge TTL 10s, browser TTL 10s, exclude query strings. Owncast includes a cache-busting query string in playlist URLs to ensure viewers always get the latest playlist, but we want to ignore those in Cloudflare, otherwise the caching has no effect. The duration is set low to ensure timely updates of the playlist.
      - Special rule for `.ts` (segments): Edge TTL 3600s, browser TTL 3600s.
 
-5. **Environment Variables for R2**:
+6. **Environment Variables for R2**:
    - `S3_ENDPOINT`: `https://<your-account-id>.r2.cloudflarestorage.com` (find your account ID in Cloudflare dashboard).
    - `S3_ACCESS_KEY`: Your R2 access key.
    - `S3_SECRET_KEY`: Your R2 secret key.
