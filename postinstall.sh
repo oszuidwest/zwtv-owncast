@@ -80,6 +80,8 @@ DISABLE_JOIN_MESSAGES_API_URL="${BASE_URL}/api/admin/config/chat/joinmessagesena
 PAGE_CONTENT_API_URL="${BASE_URL}/api/admin/config/pagecontent"
 NAME_API_URL="${BASE_URL}/api/admin/config/name"
 LOGO_API_URL="${BASE_URL}/api/admin/config/logo"
+S3_API_URL="${BASE_URL}/api/admin/config/s3"
+VIDEO_SERVING_ENDPOINT_API_URL="${BASE_URL}/api/admin/config/videoservingendpoint"
 
 # JSON Payloads
 STREAM_JSON_PAYLOAD=$(cat <<EOF
@@ -160,6 +162,31 @@ if [ -n "${LOGO_URL}" ]; then
     LOGO_PAYLOAD="{\"value\": \"data:image/jpeg;base64,$BASE64_IMAGE\"}"
 fi
 
+# Optional configurations for S3 storage
+if [ -n "${S3_ENDPOINT}" ] && [ -n "${S3_ACCESS_KEY}" ] && [ -n "${S3_SECRET_KEY}" ] && [ -n "${S3_BUCKET}" ]; then
+    S3_JSON_PAYLOAD=$(cat <<EOF
+{
+  "value": {
+    "endpoint": "${S3_ENDPOINT}",
+    "accessKey": "${S3_ACCESS_KEY}",
+    "secret": "${S3_SECRET_KEY}",
+    "bucket": "${S3_BUCKET}",
+    "region": "${S3_REGION:-auto}",
+    "acl": "${S3_ACL:-private}",
+    "pathPrefix": "${S3_PATH_PREFIX:-}",
+    "enabled": true,
+    "forcePathStyle": ${S3_FORCE_PATH_STYLE:-false}
+  }
+}
+EOF
+)
+fi
+
+# Optional configuration for video serving endpoint
+if [ -n "${VIDEO_SERVING_ENDPOINT}" ]; then
+    VIDEO_SERVING_ENDPOINT_PAYLOAD="{\"value\": \"${VIDEO_SERVING_ENDPOINT}\"}"
+fi
+
 # Function to wait for Owncast to be ready
 wait_for_owncast() {
     echo -e "${BLUE}►► Waiting for Owncast to be ready (timeout: ${HEALTH_CHECK_TIMEOUT}s)...${NC}"
@@ -229,4 +256,14 @@ fi
 # Optional: Set logo if configured
 if [ -n "${LOGO_URL}" ]; then
     perform_post "${LOGO_API_URL}" "${LOGO_PAYLOAD}" "Set Logo"
+fi
+
+# Optional: Configure S3 storage if configured
+if [ -n "${S3_ENDPOINT}" ] && [ -n "${S3_ACCESS_KEY}" ] && [ -n "${S3_SECRET_KEY}" ] && [ -n "${S3_BUCKET}" ]; then
+    perform_post "${S3_API_URL}" "${S3_JSON_PAYLOAD}" "S3 Configuration"
+fi
+
+# Optional: Set video serving endpoint if configured
+if [ -n "${VIDEO_SERVING_ENDPOINT}" ]; then
+    perform_post "${VIDEO_SERVING_ENDPOINT_API_URL}" "${VIDEO_SERVING_ENDPOINT_PAYLOAD}" "Video Serving Endpoint"
 fi

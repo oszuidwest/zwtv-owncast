@@ -111,6 +111,15 @@ if [ "$KEEP_CONFIG" == "n" ]; then
   prompt_user "SSL_HOSTNAME" "owncast.local" "Hostname for SSL proxy (e.g. owncast.example.org)" "host"
   prompt_user "STREAM_NAME" "" "Stream name (optional, leave empty to skip)" "str"
   prompt_user "LOGO_URL" "" "Logo URL (optional, leave empty to skip)" "str"
+  prompt_user "S3_ENDPOINT" "" "S3 endpoint (optional, leave empty to skip S3)" "str"
+  prompt_user "S3_ACCESS_KEY" "" "S3 access key" "str"
+  prompt_user "S3_SECRET_KEY" "" "S3 secret key" "str"
+  prompt_user "S3_BUCKET" "" "S3 bucket name" "str"
+  prompt_user "S3_REGION" "auto" "S3 region (default: auto)" "str"
+  prompt_user "S3_ACL" "private" "S3 ACL (default: private)" "str"
+  prompt_user "S3_PATH_PREFIX" "" "S3 path prefix (optional)" "str"
+  prompt_user "S3_FORCE_PATH_STYLE" "false" "S3 force path style (true/false, default: false)" "str"
+  prompt_user "VIDEO_SERVING_ENDPOINT" "" "Video serving endpoint (optional)" "str"
 fi
 
 # Set system timezone
@@ -173,6 +182,15 @@ else
   sed -i "s|SSL_HOSTNAME=.*|SSL_HOSTNAME=${SSL_HOSTNAME}|g" "${ENV_FILE}"
   sed -i "s|STREAM_NAME=.*|STREAM_NAME=${STREAM_NAME}|g" "${ENV_FILE}"
   sed -i "s|LOGO_URL=.*|LOGO_URL=${LOGO_URL}|g" "${ENV_FILE}"
+  sed -i "s|S3_ENDPOINT=.*|S3_ENDPOINT=${S3_ENDPOINT}|g" "${ENV_FILE}"
+  sed -i "s|S3_ACCESS_KEY=.*|S3_ACCESS_KEY=${S3_ACCESS_KEY}|g" "${ENV_FILE}"
+  sed -i "s|S3_SECRET_KEY=.*|S3_SECRET_KEY=${S3_SECRET_KEY}|g" "${ENV_FILE}"
+  sed -i "s|S3_BUCKET=.*|S3_BUCKET=${S3_BUCKET}|g" "${ENV_FILE}"
+  sed -i "s|S3_REGION=.*|S3_REGION=${S3_REGION}|g" "${ENV_FILE}"
+  sed -i "s|S3_ACL=.*|S3_ACL=${S3_ACL}|g" "${ENV_FILE}"
+  sed -i "s|S3_PATH_PREFIX=.*|S3_PATH_PREFIX=${S3_PATH_PREFIX}|g" "${ENV_FILE}"
+  sed -i "s|S3_FORCE_PATH_STYLE=.*|S3_FORCE_PATH_STYLE=${S3_FORCE_PATH_STYLE}|g" "${ENV_FILE}"
+  sed -i "s|VIDEO_SERVING_ENDPOINT=.*|VIDEO_SERVING_ENDPOINT=${VIDEO_SERVING_ENDPOINT}|g" "${ENV_FILE}"
 fi
 
 # Restrict permissions on .env file (contains credentials)
