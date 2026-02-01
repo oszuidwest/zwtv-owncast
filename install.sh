@@ -118,7 +118,7 @@ if [ "$S3_ENDPOINT" != "none" ]; then
   prompt_user "S3_BUCKET" "" "S3 bucket name" "str"
   prompt_user "S3_REGION" "auto" "S3 region (default: auto)" "str"
   prompt_user "S3_ACL" "private" "S3 ACL (default: private)" "str"
-  prompt_user "S3_PATH_PREFIX" "" "S3 path prefix (optional)" "str"
+  prompt_user "S3_PATH_PREFIX" "none" "S3 path prefix (optional)" "str"
   prompt_user "S3_FORCE_PATH_STYLE" "false" "S3 force path style (true/false, default: false)" "str"
   prompt_user "VIDEO_SERVING_ENDPOINT" "" "Video serving endpoint (optional)" "str"
 else
@@ -136,6 +136,7 @@ fi
   # Convert 'none' to empty strings for optional fields
   if [ "$STREAM_NAME" = "none" ]; then STREAM_NAME=""; fi
   if [ "$LOGO_URL" = "none" ]; then LOGO_URL=""; fi
+  if [ "$S3_PATH_PREFIX" = "none" ]; then S3_PATH_PREFIX=""; fi
 fi
 
 # Set system timezone
