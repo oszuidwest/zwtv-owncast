@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Files to download
-FUNCTIONS_LIB_URL="https://raw.githubusercontent.com/oszuidwest/bash-functions/v2/common-functions.sh"
+FUNCTIONS_LIB_URL="https://raw.githubusercontent.com/oszuidwest/bash-functions/main/common-functions.sh"
 FUNCTIONS_LIB_PATH=$(mktemp)
 
 # Clean up temporary file on exit
