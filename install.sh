@@ -210,6 +210,11 @@ else
   sed -i "s|VIDEO_SERVING_ENDPOINT=.*|VIDEO_SERVING_ENDPOINT=\"${VIDEO_SERVING_ENDPOINT}\"|g" "${ENV_FILE}"
 fi
 
+if [ -n "${STREAM_VARIANTS_JSON:-}" ]; then
+  sed -i '/^STREAM_VARIANTS_JSON=/d' "${ENV_FILE}"
+  echo "STREAM_VARIANTS_JSON='${STREAM_VARIANTS_JSON}'" >> "${ENV_FILE}"
+fi
+
 # Restrict permissions on .env file (contains credentials)
 chmod 600 "${ENV_FILE}"
 

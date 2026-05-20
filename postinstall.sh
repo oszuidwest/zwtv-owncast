@@ -83,10 +83,9 @@ LOGO_API_URL="${BASE_URL}/api/admin/config/logo"
 S3_API_URL="${BASE_URL}/api/admin/config/s3"
 VIDEO_SERVING_ENDPOINT_API_URL="${BASE_URL}/api/admin/config/videoservingendpoint"
 
-# JSON Payloads
-STREAM_JSON_PAYLOAD=$(cat <<EOF
-{
-    "value": [
+# Default stream output variants (360p / 480p / 720p / 1080p); override via STREAM_VARIANTS_JSON
+DEFAULT_STREAM_VARIANTS_JSON=$(cat <<'VARIANTS'
+[
         {
             "name": "Low",
             "videoPassthrough": false,
@@ -129,7 +128,21 @@ STREAM_JSON_PAYLOAD=$(cat <<EOF
             "cpuUsageLevel": 2,
             "framerate": 25
         }
-    ]
+]
+VARIANTS
+)
+
+if [ -n "${STREAM_VARIANTS_JSON}" ]; then
+    STREAM_VARIANTS="${STREAM_VARIANTS_JSON}"
+    echo -e "${BLUE}►► Stream variants: custom override${NC}"
+else
+    STREAM_VARIANTS="${DEFAULT_STREAM_VARIANTS_JSON}"
+    echo -e "${BLUE}►► Stream variants: default${NC}"
+fi
+
+STREAM_JSON_PAYLOAD=$(cat <<EOF
+{
+    "value": ${STREAM_VARIANTS}
 }
 EOF
 )

@@ -22,6 +22,7 @@ A Dockerized installer for Owncast, designed for [ZuidWest TV](https://www.zuidw
     - `S3_PATH_PREFIX` (Optional: Path prefix for S3)
     - `S3_FORCE_PATH_STYLE` (Optional: Force path style for S3, default: false)
     - `VIDEO_SERVING_ENDPOINT` (Optional: Custom endpoint for serving videos)
+    - `STREAM_VARIANTS_JSON` (Optional: JSON array of stream output variants; empty uses the default 360p/480p/720p/1080p ladder)
 - **Owncast Data**: Stored in the Docker volume `owncast_data`.
 - **Caddy Data**: Stored in the Docker volume `owncast_caddy_data`.
 - **Service Setup**:
