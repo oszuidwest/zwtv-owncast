@@ -147,6 +147,10 @@ if [ "$DO_UPDATES" == "y" ]; then
   apt_update --silent
 fi
 
+if declare -F set_system_hardening_baseline > /dev/null; then
+  set_system_hardening_baseline --silent
+fi
+
 # Create the installation directory
 echo -e "${BLUE}►► Creating installation directory: ${INSTALL_DIR}${NC}"
 mkdir -p "${INSTALL_DIR}"
