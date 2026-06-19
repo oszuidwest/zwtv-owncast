@@ -141,6 +141,8 @@ fi
 
 # Set system timezone
 set_timezone Europe/Amsterdam
+set_time_sync
+set_journald_limits
 
 # Perform OS updates if requested by the user
 if [ "$DO_UPDATES" == "y" ]; then
