@@ -139,8 +139,12 @@ fi
   if [ "$S3_PATH_PREFIX" = "none" ]; then S3_PATH_PREFIX=""; fi
 fi
 
-# Set system timezone
+# Configure host time settings
 set_timezone Europe/Amsterdam
+set_time_sync
+
+# Configure journald storage limits
+set_journald_limits
 
 # Perform OS updates if requested by the user
 if [ "$DO_UPDATES" == "y" ]; then
